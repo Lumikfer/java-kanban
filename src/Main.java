@@ -14,14 +14,18 @@ public class Main {
         manager.addTask(firstTask);
         manager.addEpic(firstEpic);
         manager.addSubTask(firstSubtask,firstEpic);
-        manager.addSubTask(firstSubtask,firstEpic);
-        manager.addSubTask(firstSubtask,firstEpic);
-        manager.addSubTask(firstSubtask,firstEpic);
-        manager.updateStatusEpic(Status.StatusType.NEW,firstEpic,firstSubtask);
-        System.out.println(firstTask);
+        manager.addSubTask(firstSubtask1,firstEpic);
+        manager.addSubTask(firstSubtask2,firstEpic);
+        manager.updateStatusEpic(firstEpic,firstSubtask);
+
+        manager.updateStatusEpic(firstEpic,firstSubtask1);
+        manager.deleteAllEpics();
+        manager.getEpic();
+        manager.deleteAllTask();
+        manager.printAllTask();
 
 
-        System.out.println(firstEpic);
+
 
 
 
