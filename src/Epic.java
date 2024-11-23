@@ -12,6 +12,10 @@ public class Epic extends Task{
     public static ArrayList<Integer> getSubtaskID(){
         return subtaskID;
     }
+    public void delsub(int id)
+    {
+        subtaskID.remove(id);
+    }
     @Override
     public String toString() {
         return "Epic{" +

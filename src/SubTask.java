@@ -5,8 +5,12 @@ public class SubTask extends Task {
         super(name,description,status);
         this.epicId = epicId;
     }
-    public int getEpicId() {
+    public  int getEpicId() {
         return epicId;
+    }
+    public void setEpicId(int epicId)
+    {
+        this.epicId = epicId;
     }
 
 
