@@ -18,6 +18,7 @@ public class  TaskManager {
         subTask.setEpicId(epic.getId());
         SubTasks.put(subTask.getId(), subTask);
         updateStatusEpic(epic);
+
     }
 
     public void updateTask(Task task, Status.StatusType status) {
@@ -25,7 +26,6 @@ public class  TaskManager {
         task.setStatus(status);
     }
     public void addEpic(Epic Epic) {
-
         Epic.setId(++taskCount);
         Epics.put(Epic.getId(), Epic);
     }
@@ -156,10 +156,9 @@ public class  TaskManager {
 
        SubTask subTask = SubTasks.get(id);
        Epic epic = Epics.get(subTask.getEpicId());
-
        epic.getSubtaskID().remove((Integer) subTask.getId());
-       updateStatusEpic(epic);
 
+       updateStatusEpic(epic);
        SubTasks.remove(id);
 
    }
@@ -190,6 +189,11 @@ public class  TaskManager {
 
    }
     public void updateSubTask(SubTask subTask,Epic epic,Status.StatusType status) {
+        Integer subtaskID = subTask.getId();
+        if (subtaskID == null || !SubTasks.containsKey(subtaskID)||!Epics.containsKey(subTask.getEpicId())) {
+            System.out.println("_______-----_____");
+            return;
+        }
         SubTasks.put(subTask.getId(), subTask);
         subTask.setStatus(status);
         updateStatusEpic(epic);
