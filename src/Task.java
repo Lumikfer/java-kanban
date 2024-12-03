@@ -1,73 +1,86 @@
 import java.util.Objects;
 
 public class Task {
-    private  String name;
-    private String descriotion;
+
+    private String name;
+    private String description;
     private int id;
-    private Status.StatusType status;
-    public Task(String name, String descriotion, Status.StatusType status, int id) {
-        this.name = name;
-        this.descriotion = descriotion;
+    private Status status;
+
+    public Task(int id, String name, String description, Status status) {
         this.id = id;
-
-    }
-
-    public Task(String description, String name, Status.StatusType status) {
         this.name = name;
-        this.descriotion = description;
+        this.description = description;
         this.status = status;
-
     }
 
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-    public int getId()
-    {
-        return id;
-    }
-    public void setDescriotion(String descriotion)
-    {
-        this.descriotion = descriotion;
-    }
-    public String getDescriotion()
-    {
-        return descriotion;
-    }
-    public void setName(String name)
-    {
+    public Task(String name, String description) {
         this.name = name;
+        this.description = description;
+        this.status = Status.NEW;
     }
-    public String getName()
-    {
+
+    public String getName() {
         return name;
     }
-    public void setStatus(Status.StatusType status){this.status = status;}
-    public Status.StatusType getStatus()
-    {
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Status getStatus() {
         return status;
     }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return id == task.id && Objects.equals(descriotion, task.descriotion) && Objects.equals(name, task.name)
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Task task = (Task) object;
+        return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description)
                 && status == task.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(descriotion, id, name, status);
+        int hash = 17;
+        if (name != null) {
+            hash = hash + name.hashCode();
+        }
+        hash = hash * 31;
+        if (description != null) {
+            hash = hash + description.hashCode();
+        }
+        return hash;
     }
+
+    @Override
     public String toString() {
         return "Task{" +
-                "description='" + descriotion + '\'' +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 ", id=" + id +
-                ", name='" + name + '\'' +
                 ", status=" + status +
                 '}';
     }
-
 }
