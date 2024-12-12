@@ -1,84 +1,86 @@
-import manager.InMemoryTaskManager;
-import manager.Managers;
-import enums.Status;
-import task.Task;
-import task.Epic;
-import task.Subtask;
+import Managers.Managers;
+import Status.Status;
+import Task.Epic;
+import Task.Subtask;
+import Task.Task;
+import Managers.TaskManager;
 
 public class Main {
-
-    private static final InMemoryTaskManager inMemoryTaskManager = Managers.getDefault();
+    private static TaskManager taskManager = Managers.getDefault();
 
     public static void main(String[] args) {
-
         addTasks();
-        printAllTasks();
-        printViewHistory();
+
     }
 
     private static void addTasks() {
-        Task washFloor = new Task("Помыть полы", "С новым средством");
-        inMemoryTaskManager.addTask(washFloor);
+        Task task1 = new Task("asdasd", "door " +
+                "muiy", Status.NEW);
+        taskManager.addTask(task1);
 
-        Task washFloorToUpdate = new Task(washFloor.getId(), "Не забыть помыть полы",
-                "Можно и без средства", Status.IN_PROGRESS);
-        inMemoryTaskManager.updateTask(washFloorToUpdate);
-        inMemoryTaskManager.addTask(new Task("Купить книги", "Список в заметках"));
+        Task updateTask1 = new Task("kernak", "sektar",
+                task1.getId(), Status.IN_PROGRESS);
+        taskManager.updateTask(updateTask1);
+        taskManager.addTask(new Task("sadasd", "123", Status.NEW));
 
 
-        Epic flatRenovation = new Epic("Сделать ремонт", "Нужно успеть за отпуск");
-        inMemoryTaskManager.addEpic(flatRenovation);
-        Subtask flatRenovationSubtask1 = new Subtask("Поклеить обои", "Обязательно светлые!",
-                flatRenovation.getId());
-        Subtask flatRenovationSubtask2 = new Subtask("Установить новую технику", "Старую продать на Авито",
-                flatRenovation.getId());
-        Subtask flatRenovationSubtask3 = new Subtask("Заказать книжный шкаф", "Из темного дерева",
-                flatRenovation.getId());
-        inMemoryTaskManager.addSubtask(flatRenovationSubtask1);
-        inMemoryTaskManager.addSubtask(flatRenovationSubtask2);
-        inMemoryTaskManager.addSubtask(flatRenovationSubtask3);
-        flatRenovationSubtask2.setStatus(Status.DONE);
-        inMemoryTaskManager.updateSubtask(flatRenovationSubtask2);
-    }
-
-    private static void printAllTasks() {
-        System.out.println("Задачи:");
-        for (Task task : Main.inMemoryTaskManager.getTasks()) {
-            System.out.println(task);
-        }
-        System.out.println("Эпики:");
-        for (Epic epic : Main.inMemoryTaskManager.getEpics()) {
-            System.out.println(epic);
-
-            for (Task task : Main.inMemoryTaskManager.getEpicSubtasks(epic)) {
-                System.out.println("--> " + task);
-            }
-        }
-
-        System.out.println("Подзадачи:");
-        for (Task subtask : Main.inMemoryTaskManager.getSubtasks()) {
-            System.out.println(subtask);
-        }
-    }
-
-    private static void printViewHistory() {
-        //просматриваем 11 задач, в истории должны отобразиться последние 10
-        Main.inMemoryTaskManager.getTaskByID(1);
-        Main.inMemoryTaskManager.getTaskByID(2);
-        Main.inMemoryTaskManager.getEpicByID(3);
-        Main.inMemoryTaskManager.getTaskByID(1);
-        Main.inMemoryTaskManager.getSubtaskByID(4);
-        Main.inMemoryTaskManager.getSubtaskByID(5);
-        Main.inMemoryTaskManager.getSubtaskByID(6);
-        Main.inMemoryTaskManager.getEpicByID(3);
-        Main.inMemoryTaskManager.getSubtaskByID(4);
-        Main.inMemoryTaskManager.getTaskByID(2);
-        Main.inMemoryTaskManager.getSubtaskByID(6);
-
+        Epic doHomeWork = new Epic("321", "012");
+        taskManager.addEpic(doHomeWork);
+        Subtask doHomeWork1 = new Subtask("12", "3333", doHomeWork.getId(),
+                Status.DONE, doHomeWork.getId());
+        Subtask doHomeWork2 = new Subtask("2", "1111",
+                doHomeWork.getId(), Status.DONE, doHomeWork.getId());
+        Subtask doHomeWork3 = new Subtask("bueno", "123", doHomeWork.getId(),
+                Status.NEW, doHomeWork.getId());
+        taskManager.addSubtask(doHomeWork1);
+        taskManager.addSubtask(doHomeWork2);
+        taskManager.addSubtask(doHomeWork3);
+        System.out.println(taskManager.getEpics());
+        System.out.println("-".repeat(50));
+        System.out.println(taskManager.getSubtasks());
+        System.out.println("-".repeat(50));
+        Subtask doHomeWork4 = new Subtask("11111", "921",
+                doHomeWork3.getId(), Status.DONE, doHomeWork.getId());
+        taskManager.updateSubtask(doHomeWork4);
+        System.out.println(taskManager.getSubtasks());
+        System.out.println("-".repeat(50));
+        System.out.println(taskManager.getEpics());
+        System.out.println("-".repeat(50));
+        taskManager.removeSubtaskById(doHomeWork3.getId());
+        System.out.println(taskManager.getSubtasks());
+        System.out.println("-".repeat(50));
+        System.out.println(taskManager.getEpics());
+        taskManager.removeEpicById(doHomeWork1.getId());
+        System.out.println(taskManager.getEpics());
+        System.out.println(taskManager.getEpics());
+        Epic epic2 = new Epic("2222222", "333333", doHomeWork.getId());
+        taskManager.updateEpic(epic2);
+        System.out.println("-".repeat(50));
+        System.out.println(taskManager.getEpics());
+        System.out.println(taskManager.getSubtasks());
+        System.out.println(taskManager.getSubtasks());
+        Subtask subtask1 = new Subtask("012", "021", doHomeWork2.getId(), Status.NEW, doHomeWork.getId());
+        taskManager.updateSubtask(subtask1);
+        System.out.println("-".repeat(50));
+        System.out.println(taskManager.getSubtasks());
+        taskManager.addEpic(epic2);
+        System.out.println(taskManager.getEpics());
+        taskManager.removeEpicById(15);
         System.out.println();
-        System.out.println("История просмотров:");
-        for (Task task : Main.inMemoryTaskManager.getHistory()) {
-            System.out.println(task);
-        }
+        System.out.println(taskManager.getEpics());
+        System.out.println(taskManager.getSubtasks());
+        taskManager.removeSubtaskById(doHomeWork1.getId());
+        System.out.println(taskManager.getSubtasks());
+        System.out.println("-".repeat(50));
+        System.out.println(taskManager.getSubtasksForEpic(doHomeWork.getId()));
+        System.out.println("-".repeat(50));
+        System.out.println(taskManager.getHistory());
+        System.out.println(taskManager.getTasksById(task1.getId()));
+        System.out.println(taskManager.getSubtasksById(doHomeWork2.getId()));
+        System.out.println(taskManager.getSubtasksById(doHomeWork2.getId()));
+        System.out.println(taskManager.getEpicsById(doHomeWork1.getEpicId()));
+        System.out.println("-".repeat(50));
+        System.out.println(taskManager.getHistory());
+
     }
 }
