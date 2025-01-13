@@ -1,9 +1,7 @@
-import Managers.Managers;
-import Status.Status;
-import Task.Epic;
-import Task.Subtask;
-import Task.Task;
-import Managers.TaskManager;
+import managers.*;
+import status.*;
+import task.*;
+
 
 public class Main {
     private static TaskManager taskManager = Managers.getDefault();
