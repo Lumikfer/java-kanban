@@ -16,82 +16,99 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
 
-    InMemoryHistoryManager manager;
-    static Task task1;
-    static Task task2;
-    static Task task3;
-    static Epic epic4;
-    static Epic epic5;
-    static Epic epic6;
-    static Subtask subtask7;
-    static Subtask subtask8;
-    static Subtask subtask9;
-    static Subtask subtask10;
-    static Subtask subtask11;
-    static Subtask subtask12;
-    @BeforeAll
-    public static void setup() {
-        task1 = new Task("Task1", "Description1", 1);
-        task2 = new Task("Task2", "Description2", 2);
-        task3 = new Task("Task3", "Description3", 3);
-        epic4 = new Epic("Epic4", "Description4", 4);
-        epic5 = new Epic("Epic5", "Description5", 5);
-        epic6 = new Epic("Epic6", "Description6", 6);
-        subtask7 = new Subtask("Subtask7", "Description7", 4, 7);
-        subtask8 = new Subtask("Subtask8", "Description8", 5, 8);
-        subtask9 = new Subtask("Subtask9", "Description9", 6, 9);
-        subtask10 = new Subtask("Subtask10", "Description10", 4, 10);
-        subtask11 = new Subtask("Subtask11", "Description11", 5, 11);
-        subtask12 = new Subtask("Subtask12", "Description12", 6, 12);
-    }
+    InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
     @BeforeEach
-    public void setupTest() {
-        manager = new InMemoryHistoryManager();
+    void fillTasks() {
+        Task task1 = new Task("name", "dsc", Status.NEW);
+        task1.setId(1);
+        Task task2 = new Task("name", "dsc", Status.NEW);
+        task2.setId(2);
+        Task task3 = new Task("name", "dsc", Status.NEW);
+        task3.setId(3);
+        Task task4 = new Task("name", "dsc", Status.NEW);
+        task4.setId(4);
+        Task task5 = new Task("name", "dsc", Status.NEW);
+        task5.setId(5);
+        Task task6 = new Task("name", "dsc", Status.NEW);
+        task6.setId(6);
+        Epic epic1 = new Epic("name", "dsc");
+        epic1.setId(7);
+        Epic epic2 = new Epic("name", "dsc");
+        epic2.setId(8);
+        Subtask subtask1 = new Subtask("name", "dsc", Status.NEW, 111);
+        subtask1.setId(9);
+        Subtask subtask2 = new Subtask("name", "dsc", Status.NEW, 111);
+        subtask2.setId(10);
+        Subtask subtask3 = new Subtask("name", "dsc", Status.NEW, 111);
+        subtask3.setId(11);
+
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.add(task3);
+        historyManager.add(task4);
+        historyManager.add(task5);
+        historyManager.add(task6);
+        historyManager.add(epic1);
+        historyManager.add(epic2);
+        historyManager.add(subtask1);
+        historyManager.add(subtask2);
+        historyManager.add(subtask3);
     }
 
     @Test
-    public void addDifferentTasksInHistory() {
-        manager.add(task1);
-        manager.add(task2);
-        manager.add(epic4);
-        manager.add(epic5);
-        manager.add(subtask7);
-        manager.add(subtask8);
-        Assertions.assertEquals(6, manager.getHistory().size());
+    void shouldAddTaskAndGetHistory() {
+        historyManager.add(new Task("name", "dsc", Status.NEW));
+        assertEquals(12, historyManager.getHistory().size());
+        assertEquals("name", historyManager.getHistory().getFirst().getName());
     }
 
     @Test
-    public void addAndReplaceFirstTaskInHistory() {
-        manager.add(task1);
-        manager.add(task2);
-        manager.add(task3);
-        manager.add(epic4);
-        manager.add(epic5);
-        manager.add(epic6);
-        manager.add(subtask7);
-        manager.add(subtask8);
-        manager.add(subtask9);
-        manager.add(subtask10);
-        Assertions.assertEquals(10, manager.getHistory().size());
+    void shouldRemoveTaskFromHistory() {
+        Task task1 = new Task("name", "dsc", Status.NEW);
+        task1.setId(1);
+        Task task2 = new Task("name", "dsc", Status.NEW);
+        task2.setId(2);
+        Task task3 = new Task("name", "dsc", Status.NEW);
+        task3.setId(3);
+        Task task4 = new Task("name", "dsc", Status.NEW);
+        task4.setId(4);
+        Task task5 = new Task("name", "dsc", Status.NEW);
+        task5.setId(5);
+        Task task6 = new Task("name", "dsc", Status.NEW);
+        task6.setId(6);
+        Epic epic1 = new Epic("name", "dsc");
+        epic1.setId(7);
+        Epic epic2 = new Epic("name", "dsc");
+        epic2.setId(8);
+        Subtask subtask1 = new Subtask("name", "dsc", Status.NEW, 999);
+        subtask1.setId(9);
+        Subtask subtask2 = new Subtask("name", "dsc", Status.NEW, 999);
+        subtask2.setId(10);
+        Subtask subtask3 = new Subtask("name", "dsc", Status.NEW, 999);
+        subtask3.setId(11);
 
-        manager.add(subtask11);
+        ArrayList<Task> list = new ArrayList<>();
+        list.add(task1);
+        list.add(task2);
+        list.add(task3);
+        list.add(task4);
+        list.add(task5);
+        list.add(task6);
+        list.add(epic1);
+        list.add(epic2);
+        list.add(subtask1);
+        list.add(subtask2);
+        list.add(subtask3);
 
-        Assertions.assertEquals(10, manager.getHistory().size());
-        Assertions.assertEquals(task2, manager.getHistory().getFirst());
-        Assertions.assertEquals(subtask11, manager.getHistory().getLast());
+        list.remove(0);
+        historyManager.rmv(1);
+        list.remove(5);
+        historyManager.rmv(7);
+        list.remove(8);
+        historyManager.rmv(11);
 
-        manager.add(subtask12);
-
-        Assertions.assertEquals(10, manager.getHistory().size());
-        Assertions.assertEquals(task3, manager.getHistory().getFirst());
-        Assertions.assertEquals(subtask12, manager.getHistory().getLast());
-    }
-
-    @Test
-    public void negativeAddNullInHistory() {
-        manager.add(null);
-        Assertions.assertTrue(manager.getHistory().isEmpty());
+        assertEquals(list, historyManager.getHistory());
     }
 
 
