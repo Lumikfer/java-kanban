@@ -1,6 +1,6 @@
 package task;
 
-import Status.Status;
+import status.Status;
 
 import java.util.Objects;
 
@@ -57,7 +57,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Tasks.Task{" +
+        return "Tasks.Task{"+
                 "Name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
