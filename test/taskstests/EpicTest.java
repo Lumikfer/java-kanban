@@ -6,39 +6,25 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 class EpicTest {
-    Epic epic1;
+    private Epic epic1;
+    private Epic epic2;
 
     @BeforeEach
     void setUp() {
-        epic1 = new Epic("name", "description");
+        epic1 = new Epic("Сделать дипломную работу", "Нужно успеть за месяц", 3);
+        epic2 = new Epic("Сделать тз", "Сегодня крайний день", 3);
     }
 
     @Test
-    void shouldAddSubTaskAndGetTasksIds() {
-        epic1.addSubtask(1);
-
-        ArrayList<Integer> list = new ArrayList<>();
-        list.add(1);
-
-        assertEquals(list, epic1.getSubtasks());
+    void shouldReturnTrueIfIdsAreEquals() {
+        assertEquals(epic1, epic2);
     }
 
+    
     @Test
-    void shouldRemoveSubtask() {
-        epic1.addSubtask(1);
-        epic1.rmvSubtaskById(1);
-
-        ArrayList<Integer> list = new ArrayList<>();
-        assertEquals(list, epic1.getSubtasks());
-
-    }
-
-    @Test
-    void shouldRemoveAllSubtasks() {
-        epic1.addSubtask(1);
-        epic1.rmvAllSubtasks();
-
-        ArrayList<Integer> list = new ArrayList<>();
-        assertEquals(list, epic1.getSubtasks());
+    void shouldReturnFalseWhenAddingEpicAsSubtaskToItself() {
+        int subtasksSize = epic1.getSubtasksId().size();
+        epic1.addSubtask(3);
+        assertEquals(subtasksSize, epic1.getSubtasksId().size());
     }
 }
