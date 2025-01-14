@@ -1,12 +1,12 @@
 package managerstests;
 
 import managers.Managers;
-import statuses.Status;
+import status.Status;
 import managers.InMemoryHistoryManager;
 import managers.TaskManager;
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
+import task.Epic;
+import task.Subtask;
+import task.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

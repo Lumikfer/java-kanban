@@ -1,6 +1,6 @@
 package taskstests;
 
-import tasks.Epic;
+import task.Epic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
