@@ -9,213 +9,228 @@ import managers.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryTaskManagerTest {
-    private TaskManager taskManager;
-    private Task task1;
-    private Task task2;
-    private Epic epic1;
-    private Epic epic2;
+public class InMemoryTaskManager implements TaskManager {
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
+    private final Map<Integer, Subtask> subtasks = new HashMap<>();
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
+    private int nextID = 0;
 
-    @BeforeEach
-    void setUp() {
-        taskManager = Managers.getDefault();
-        task1 = new Task("Убраться в комнате", "Протереть пыль, пропылесосить ковер, сделать " +
-                "влажную уборку", Status.NEW);
-        task2 = new Task("Сходить в спортзал", "Сегодня день ног и спины", Status.NEW);
-        epic1 = new Epic("Сделать дипломную работу", "Нужно успеть за месяц");
-        epic2 = new Epic("Сделать тз", "Сегодня крайний день");
+
+    @Override
+    public void addTask(Task task) {
+        task.setId(nextID++);
+        tasks.put(task.getId(), task);
+    }
+
+    @Override
+    public void addEpic(Epic epic) {
+        epic.setId(nextID++);
+        epics.put(epic.getId(), epic);
+    }
+
+    @Override
+    public void addSubtask(Subtask subtask) {
+        if (!epics.containsKey(subtask.getEpicId())) {
+            return;
+        }
+
+        subtask.setId(nextID++);
+        Epic epic = epics.get(subtask.getEpicId());
+        epic.addSubtask(subtask.getId());
+        subtasks.put(subtask.getId(), subtask);
+        updateEpicStatus(epic);
+    }
+
+    @Override
+    public void updateTask(Task task) {
+        int taskId = task.getId();
+        if (!tasks.containsKey(taskId)) {
+            return;
+        }
+        tasks.put(task.getId(), task);
 
     }
 
-    @Test
-    void shouldAddAndGetNewTasks() {
-        taskManager.addTask(task1);
-        Task task = taskManager.getTasksById(task1.getId());
-        assertNotNull(task);
-        assertEquals(task1, task);
+
+    @Override
+    public void updateEpic(Epic epic) {
+        int epicId = epic.getId();
+        if (!epics.containsKey(epicId)) {
+            return;
+        }
+        Epic updatedEpic = epics.get(epicId);
+        updatedEpic.setName(epic.getName());
+        updatedEpic.setDescription(epic.getDescription());
     }
 
-    @Test
-    void shouldGetAllTasks() {
-        taskManager.addTask(task1);
-        taskManager.addTask(task2);
-        List<Task> tasks = taskManager.getTasks();
-        assertNotNull(tasks);
-        assertEquals(2, tasks.size());
-        assertTrue(tasks.contains(task1));
-        assertTrue(tasks.contains(task2));
+    @Override
+    public void updateSubtask(Subtask subtask) {
+        int subtaskId = subtask.getId();
+        if (!subtasks.containsKey(subtaskId)) {
+            return;
+        }
+        Subtask subtaskToRemove = subtasks.get(subtaskId);
+        int epicId = subtaskToRemove.getEpicId();
+        if (epicId == subtask.getEpicId()) {
+            subtasks.put(subtask.getId(), subtask);
+            Epic epic = epics.get(epicId);
+            updateEpicStatus(epic);
+        }
     }
 
-    @Test
-    void shouldUpdateTaskToNewTask() {
-        taskManager.addTask(task1);
-        Task updateTask1 = new Task("Не забыть убраться в комнате", "Можно без влажной уборки",
-                task1.getId(), Status.IN_PROGRESS);
-        taskManager.updateTask(updateTask1);
-        List<Task> tasks = taskManager.getTasks();
-        assertNotNull(tasks);
-        assertEquals(1, tasks.size());
-        assertEquals("Не забыть убраться в комнате", tasks.getFirst().getName());
+    @Override
+    public Task getTasksById(int taskId) {
+        Task task = tasks.get(taskId);
+        if (task != null) {
+            historyManager.addTask(task);
+        }
+        return tasks.get(taskId);
+    }
+
+    @Override
+    public Epic getEpicsById(int epicId) {
+        Epic epic = epics.get(epicId);
+        if (epic != null) {
+            historyManager.addTask(epic);
+        }
+        return epics.get(epicId);
+    }
+
+    @Override
+    public Subtask getSubtasksById(int subtaskId) {
+        Subtask subtask = subtasks.get(subtaskId);
+        if (subtask != null) {
+            historyManager.addTask(subtask);
+        }
+        return subtasks.get(subtaskId);
+    }
+
+    @Override
+    public List<Task> getTasks() {
+        return new ArrayList<>(tasks.values());
+    }
+
+    @Override
+    public List<Epic> getEpics() {
+        return new ArrayList<>(epics.values());
+    }
+
+    @Override
+    public List<Subtask> getSubtasks() {
+        return new ArrayList<>(subtasks.values());
+    }
+
+    @Override
+    public void removeTaskById(int taskId) {
+        if (!tasks.containsKey(taskId)) {
+            return;
+        }
+        tasks.remove(taskId);
+    }
+
+    @Override
+    public void removeEpicById(int epicId) {
+        if (!epics.containsKey(epicId)) {
+            return;
+        }
+        ArrayList<Integer> epicSubtasks = epics.get(epicId).getSubtasksId();
+        for (Integer id : epicSubtasks) {
+            subtasks.remove(id);
+        }
+        epics.remove(epicId);
+    }
+
+    @Override
+    public void removeSubtaskById(int subtaskId) {
+        Subtask subtask = subtasks.get(subtaskId);
+        if (subtask != null) {
+            int epicId = subtask.getEpicId();
+            if (epicId != -1) {
+                Epic epic = epics.get(epicId);
+                if (epic != null) {
+                    ArrayList<Integer> id = epic.getSubtasksId();
+                    if (id != null) {
+                        epic.removeSubtaskById(subtaskId);
+                        updateEpicStatus(epic);
+                    }
+                }
+            }
+            subtasks.remove(subtaskId);
+        }
+    }
+
+    @Override
+    public void removeAllTasks() {
+        tasks.clear();
+    }
+
+    @Override
+    public void removeAllEpics() {
+        epics.clear();
+        subtasks.clear();
 
     }
 
-    @Test
-    void shouldRemoveAllTasks() {
-        taskManager.addTask(task1);
-        taskManager.addTask(task2);
-        taskManager.removeAllTasks();
-        List<Task> tasks = taskManager.getTasks();
-        assertTrue(tasks.isEmpty());
+    @Override
+    public void removeAllSubtasks() {
+        for (Epic epic : epics.values()) {
+            epic.clearSubtasksId();
+            updateEpicStatus(epic);
+        }
+        subtasks.clear();
     }
 
-    @Test
-    void shouldRemoveTaskById() {
-        taskManager.addTask(task1);
-        taskManager.addTask(task2);
-        taskManager.removeTaskById(task1.getId());
-        List<Task> tasks = taskManager.getTasks();
-        assertFalse(tasks.contains(task1));
-        assertTrue(tasks.contains(task2));
+    @Override
+    public List<Subtask> getSubtasksForEpic(int epicId) {
+        ArrayList<Subtask> subtaskList = new ArrayList<>();
+        Epic epic = epics.get(epicId);
+        if (epic != null) {
+            for (int subtaskId : epic.getSubtasksId()) {
+                Subtask subtask = subtasks.get(subtaskId);
+                if (subtask != null) {
+                    subtaskList.add(subtask);
+                }
+            }
+        }
+        return subtaskList;
     }
 
-    @Test
-    void shouldAddAndGetNewEpics() {
-        taskManager.addEpic(epic1);
-        Epic epic = taskManager.getEpicsById(epic1.getId());
-        assertNotNull(epic);
-        assertEquals(epic1, epic);
-
-
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 
-    @Test
-    void shouldGetAllEpics() {
-        taskManager.addEpic(epic1);
-        taskManager.addEpic(epic2);
-        List<Epic> epics = taskManager.getEpics();
-        assertNotNull(epics);
-        assertEquals(2, epics.size());
-        assertTrue(epics.contains(epic1));
-        assertTrue(epics.contains(epic2));
-    }
-
-    @Test
-    void shouldUpdateEpicToNewEpic() {
-        taskManager.addEpic(epic1);
-        Epic updateEpic1 = new Epic("Съездить в отпуск в июне", "В приоритете в Германию, попить нормального пива",
-                epic1.getId());
-        taskManager.updateEpic(updateEpic1);
-        List<Epic> epics = taskManager.getEpics();
-        assertNotNull(epics);
-        assertEquals(1, epics.size());
-        assertEquals("Съездить в отпуск в июне", epics.getFirst().getName());
-
-    }
-
-    @Test
-    void shouldRemoveAllEpicsAlsoShouldRemoveAllSubtasks() {
-        taskManager.addEpic(epic1);
-        taskManager.addEpic(epic2);
-        Subtask subtask1 = new Subtask("Сделать презентацию", "12 слайдов", epic1.getId(),
-                Status.NEW, epic1.getId());
-        Subtask subtask2 = new Subtask("Подготовить речь", "На 5-7 минут выступления", epic1.getId(),
-                Status.NEW, epic1.getId());
-        taskManager.addSubtask(subtask1);
-        taskManager.addSubtask(subtask2);
-        taskManager.removeAllEpics();
-        List<Epic> epics = taskManager.getEpics();
-        List<Subtask> subtasks = taskManager.getSubtasks();
-        assertTrue(epics.isEmpty());
-        assertTrue(subtasks.isEmpty());
-    }
-
-    @Test
-    void shouldRemoveEpicByIdAlsoShouldRemoveAllSubtasks() {
-        taskManager.addEpic(epic1);
-        taskManager.addEpic(epic2);
-        Subtask subtask1 = new Subtask("Сделать презентацию", "12 слайдов", epic1.getId(),
-                Status.NEW, epic1.getId());
-        Subtask subtask2 = new Subtask("Подготовить речь", "На 5-7 минут выступления", epic1.getId(),
-                Status.NEW, epic1.getId());
-        taskManager.addSubtask(subtask1);
-        taskManager.addSubtask(subtask2);
-        taskManager.removeEpicById(epic1.getId());
-        List<Epic> epics = taskManager.getEpics();
-        List<Subtask> subtasks = taskManager.getSubtasks();
-        assertFalse(epics.contains(epic1));
-        assertTrue(subtasks.isEmpty());
-    }
-
-    @Test
-    void shouldAddAndGetNewSubtasks() {
-        taskManager.addEpic(epic1);
-        Subtask subtask1 = new Subtask("Сделать презентацию", "12 слайдов", epic1.getId(),
-                Status.NEW, epic1.getId());
-        taskManager.addSubtask(subtask1);
-        Subtask subtask = taskManager.getSubtasksById(subtask1.getId());
-        assertNotNull(subtask1);
-        assertEquals(subtask1, subtask);
-    }
-
-    @Test
-    void shouldGetAllSubtasks() {
-        taskManager.addEpic(epic1);
-        Subtask subtask1 = new Subtask("Сделать презентацию", "12 слайдов", epic1.getId(),
-                Status.NEW, epic1.getId());
-        Subtask subtask2 = new Subtask("Подготовить речь", "На 5-7 минут выступления", epic1.getId(),
-                Status.NEW, epic1.getId());
-        taskManager.addSubtask(subtask1);
-        taskManager.addSubtask(subtask2);
-        List<Subtask> subtasks = taskManager.getSubtasks();
-        assertNotNull(subtasks);
-        assertEquals(2, subtasks.size());
-        assertTrue(subtasks.contains(subtask1));
-        assertTrue(subtasks.contains(subtask2));
-    }
-
-    @Test
-    void shouldUpdateSubtaskToNewSubtaskAlsoShouldChangeEpicStatus() {
-        taskManager.addEpic(epic1);
-        Subtask subtask1 = new Subtask("Сделать презентацию", "12 слайдов", epic1.getId(),
-                Status.NEW, epic1.getId());
-        Subtask subtask2 = new Subtask("Подготовить речь", "На 5-7 минут выступления", epic1.getId(),
-                Status.NEW, epic1.getId());
-        taskManager.addSubtask(subtask1);
-        taskManager.addSubtask(subtask2);
-        Status epic1Status = epic1.getStatus();
-        Subtask subtask3 = new Subtask("Погладить рубашку", "Желательно черную", subtask2.getId(),
-                Status.DONE, epic1.getId());
-        taskManager.updateSubtask(subtask3);
-        List<Subtask> subtasks = taskManager.getSubtasks();
-        Status actualEpicStatus = epic1.getStatus();
-        assertNotNull(subtasks);
-        assertEquals(2, subtasks.size());
-        assertTrue(subtasks.contains(subtask1));
-        assertTrue(subtasks.contains(subtask3));
-        assertNotEquals(epic1Status, actualEpicStatus);
-    }
-
-    @Test
-    void shouldRemoveSubtaskByIdAlsoShouldChangeEpicStatus() {
-        taskManager.addEpic(epic1);
-        Subtask subtask1 = new Subtask("Сделать презентацию", "12 слайдов", epic1.getId(),
-                Status.NEW, epic1.getId());
-        Subtask subtask2 = new Subtask("Подготовить речь", "На 5-7 минут выступления", epic1.getId(),
-                Status.DONE, epic1.getId());
-        taskManager.addSubtask(subtask1);
-        taskManager.addSubtask(subtask2);
-        Status epic1Status = epic1.getStatus();
-        taskManager.removeSubtaskById(subtask1.getId());
-        List<Subtask> subtasks = taskManager.getSubtasks();
-        Status actualEpicStatus = epic1.getStatus();
-        assertNotNull(subtasks);
-        assertEquals(1, subtasks.size());
-        assertTrue(subtasks.contains(subtask2));
-        assertNotEquals(epic1Status, actualEpicStatus);
-
+    private void updateEpicStatus(Epic epic) {
+        List<Integer> subtasksId = epic.getSubtasksId();
+        if (subtasksId.isEmpty()) {
+            epic.setStatus(Status.NEW);
+            return;
+        }
+        int allDoneCount = 0;
+        int allNewCount = 0;
+        for (int id : subtasksId) {
+            Subtask subtask = subtasks.get(id);
+            if (subtask.getStatus() == Status.DONE) {
+                allDoneCount++;
+            }
+            if (subtask.getStatus() == Status.NEW) {
+                allNewCount++;
+            }
+        }
+        if (allDoneCount == subtasksId.size()) {
+            epic.setStatus(Status.DONE);
+        } else if (allNewCount == subtasksId.size()) {
+            epic.setStatus(Status.NEW);
+        } else {
+            epic.setStatus(Status.IN_PROGRESS);
+        }
     }
 }
