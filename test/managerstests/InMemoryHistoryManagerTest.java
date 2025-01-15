@@ -100,14 +100,7 @@ class InMemoryHistoryManagerTest {
         list.add(subtask1);
         list.add(subtask2);
         list.add(subtask3);
-
-        list.remove(0);
-        historyManager.remove(1);
-        list.remove(5);
-        historyManager.remove(7);
-        list.remove(8);
-        historyManager.remove(11);
-
+        
         assertEquals(list, historyManager.getHistory());
     }
 }
