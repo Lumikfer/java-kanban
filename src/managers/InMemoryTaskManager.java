@@ -170,7 +170,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllTasks() {
-
         for(int z:tasks.keySet()){
             historyManager.remove(z);
         }
@@ -184,8 +183,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
         epics.clear();
         subtasks.clear();
-
-
     }
 
     @Override
@@ -198,7 +195,6 @@ public class InMemoryTaskManager implements TaskManager {
             updateEpicStatus(epic);
         }
         subtasks.clear();
-
     }
 
     @Override
