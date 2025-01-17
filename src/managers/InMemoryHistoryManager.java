@@ -22,7 +22,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task == null) return false;
         if (history.containsKey(task.getId()))  remove(task.getId());
         linkLast(task);
-        if (historySize > 0 && history.size() > historySize)  remove(head.task.getId());
         return true;
     }
 
