@@ -1,6 +1,6 @@
 package taskstests;
 
-import tasks.Epic;
+import task.Epic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ class EpicTest {
         assertEquals(epic1, epic2);
     }
 
-    // была реализована невозможность добавления эпика в список айди сабтасков
+    
     @Test
     void shouldReturnFalseWhenAddingEpicAsSubtaskToItself() {
         int subtasksSize = epic1.getSubtasksId().size();

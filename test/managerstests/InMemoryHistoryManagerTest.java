@@ -1,57 +1,106 @@
 package managerstests;
 
-import managers.Managers;
-import statuses.Status;
+import status.Status;
 import managers.InMemoryHistoryManager;
-import managers.TaskManager;
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
+import task.Epic;
+import task.Subtask;
+import task.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 
-class InMemoryHistoryManagerTest {
 
-    private TaskManager taskManager;
-    private InMemoryHistoryManager imhm;
+class InMemoryHistoryManagerTest {
+    InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
     @BeforeEach
-    public void setUp() {
-        taskManager = Managers.getDefault();
-        imhm = Managers.getDefaultHistory();
+    void fillTasks() {
+        Task task1 = new Task("name", "dsc", Status.NEW);
+        task1.setId(1);
+        Task task2 = new Task("name", "dsc", Status.NEW);
+        task2.setId(2);
+        Task task3 = new Task("name", "dsc", Status.NEW);
+        task3.setId(3);
+        Task task4 = new Task("name", "dsc", Status.NEW);
+        task4.setId(4);
+        Task task5 = new Task("name", "dsc", Status.NEW);
+        task5.setId(5);
+        Task task6 = new Task("name", "dsc", Status.NEW);
+        task6.setId(6);
+        Epic epic1 = new Epic("name", "dsc");
+        epic1.setId(7);
+        Epic epic2 = new Epic("name", "dsc");
+        epic2.setId(8);
+        Subtask subtask1 = new Subtask("name", "dsc", 111, Status.NEW);
+        subtask1.setId(9);
+        Subtask subtask2 = new Subtask("name", "dsc", 111, Status.NEW);
+        subtask2.setId(10);
+        Subtask subtask3 = new Subtask("name", "dsc", 111, Status.NEW);
+        subtask3.setId(11);
+
+        historyManager.addTask(task1);
+        historyManager.addTask(task2);
+        historyManager.addTask(task3);
+        historyManager.addTask(task4);
+        historyManager.addTask(task5);
+        historyManager.addTask(task6);
+        historyManager.addTask(epic1);
+        historyManager.addTask(epic2);
+        historyManager.addTask(subtask1);
+        historyManager.addTask(subtask2);
+        historyManager.addTask(subtask3);
     }
 
     @Test
-    public void shouldAddAndGetHistory() {
-        Task task1 = new Task("Убраться в комнате", "Протереть пыль, пропылесосить ковер, сделать " +
-                "влажную уборку", Status.NEW);
-        Epic epic1 = new Epic("Сделать дипломную работу", "Нужно успеть за месяц");
-        Subtask subtask1 = new Subtask("Сделать презентацию", "12 слайдов", epic1.getId(),
-                Status.NEW, epic1.getId());
-        imhm.addTask(task1);
-        imhm.addTask(epic1);
-        imhm.addTask(subtask1);
-        assertEquals(3, imhm.getHistory().size());
-        assertTrue(imhm.getHistory().contains(task1));
-        assertTrue(imhm.getHistory().contains(epic1));
-        assertTrue(imhm.getHistory().contains(subtask1));
-
+    void shouldAddTaskAndGetHistory() {
+        historyManager.addTask(new Task("name", "dsc", Status.NEW));
+        assertEquals(12, historyManager.getHistory().size());
+        assertEquals("name", historyManager.getHistory().getFirst().getName());
     }
 
     @Test
-    void shouldRemoveFirstTaskWhenAddNewTaskAndListAreFull() {
-        Task task11 = new Task("Задача 11", "Описание", Status.NEW);
-        for (int i = 0; i < 10; i++) {
-            imhm.addTask(new Task("Задача " + i, "Описание", Status.NEW));
-        }
-        imhm.addTask(task11);
+    void shouldRemoveTaskFromHistory() {
+        Task task1 = new Task("name", "dsc", Status.NEW);
+        task1.setId(1);
+        Task task2 = new Task("name", "dsc", Status.NEW);
+        task2.setId(2);
+        Task task3 = new Task("name", "dsc", Status.NEW);
+        task3.setId(3);
+        Task task4 = new Task("name", "dsc", Status.NEW);
+        task4.setId(4);
+        Task task5 = new Task("name", "dsc", Status.NEW);
+        task5.setId(5);
+        Task task6 = new Task("name", "dsc", Status.NEW);
+        task6.setId(6);
+        Epic epic1 = new Epic("name", "dsc");
+        epic1.setId(7);
+        Epic epic2 = new Epic("name", "dsc");
+        epic2.setId(8);
+        Subtask subtask1 = new Subtask("name", "dsc", 999,Status.NEW);
+        subtask1.setId(9);
+        Subtask subtask2 = new Subtask("name", "dsc", 999,Status.NEW);
+        subtask2.setId(10);
+        Subtask subtask3 = new Subtask("name", "dsc", 999,Status.NEW);
+        subtask3.setId(11);
 
-        assertEquals(10, imhm.getHistory().size());
-        assertEquals(task11, imhm.getHistory().get(9));
-
+        ArrayList<Task> list = new ArrayList<>();
+        list.add(task1);
+        list.add(task2);
+        list.add(task3);
+        list.add(task4);
+        list.add(task5);
+        list.add(task6);
+        list.add(epic1);
+        list.add(epic2);
+        list.add(subtask1);
+        list.add(subtask2);
+        list.add(subtask3);
+        
+        assertEquals(list, historyManager.getHistory());
     }
 }

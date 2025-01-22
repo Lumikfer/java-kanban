@@ -1,6 +1,6 @@
-package Task;
+package task;
 
-import Status.Status;
+import status.Status;
 
 import java.util.Objects;
 
@@ -16,7 +16,7 @@ public class Task {
         this.status = status;
     }
 
-    public Task(String name, String description, int id, Status status) {
+    public Task(String name, String description, Status status,int id) {
         this.name = name;
         this.description = description;
         this.id = id;

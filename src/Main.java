@@ -1,16 +1,12 @@
-import Managers.Managers;
-import Status.Status;
-import Task.Epic;
-import Task.Subtask;
-import Task.Task;
-import Managers.TaskManager;
+import managers.*;
+import status.*;
+import task.*;
 
 public class Main {
     private static TaskManager taskManager = Managers.getDefault();
 
     public static void main(String[] args) {
         addTasks();
-
     }
 
     private static void addTasks() {
@@ -18,8 +14,8 @@ public class Main {
                 "muiy", Status.NEW);
         taskManager.addTask(task1);
 
-        Task updateTask1 = new Task("kernak", "sektar",
-                task1.getId(), Status.IN_PROGRESS);
+        Task updateTask1 = new Task("kernak", "sektar", Status.IN_PROGRESS,
+                task1.getId());
         taskManager.updateTask(updateTask1);
         taskManager.addTask(new Task("sadasd", "123", Status.NEW));
 
