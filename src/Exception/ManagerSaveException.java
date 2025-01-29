@@ -1,4 +1,5 @@
 package exception;
+
 import java.io.File;
 import java.util.NoSuchElementException;
 
@@ -9,6 +10,7 @@ public class ManagerSaveException extends NoSuchElementException {
         super(message);
         this.file = file;
     }
+
     public String getDetailMessage() {
         return String.format("%s в файл - %s", getMessage(), file.getAbsolutePath());
     }
