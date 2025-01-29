@@ -13,15 +13,18 @@ import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private File fileTask;
+    
     public  FileBackedTaskManager() {
         this.fileTask = new File("task.txt");
     }
+    
     public FileBackedTaskManager(File file) throws IOException {
         this.fileTask = file;
         try (FileWriter fr = new FileWriter(fileTask)) {
             fr.write("id, type, name, status, description, epic");
         }
     }
+    
     public  static FileBackedTaskManager loadFromFile(File file) throws ManagerLoadFromFileException {
         try(BufferedReader br = new BufferedReader(new FileReader(file))) {
             FileBackedTaskManager manager = new FileBackedTaskManager();
@@ -30,6 +33,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             while(br.ready()){
                 list.add(br.readLine());
             }
+            
             list.remove(head);
             for(String str:list) {
                 String[] s = str.split(",");
@@ -66,46 +70,55 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             throw new ManagerSaveException("Возникла ошибка при автосохранении менеджера", fileTask);
         }
     }
+    
     @Override
     public void addTask(Task task) {
         super.addTask(task);
         save();
     }
+    
     @Override
     public void addSubtask(Subtask subtask) {
         super.addSubtask(subtask);
         save();
     }
+    
     @Override
     public void addEpic(Epic epic) {
         super.addEpic(epic);
         save();
     }
+    
     @Override
     public void removeSubtaskById(int id) {
         super.removeSubtaskById(id);
         save();
     }
+    
     @Override
     public void removeEpicById(int epicId) {
         super.removeEpicById(epicId);
         save();
     }
+    
     @Override
     public void removeAllTasks() {
         super.removeAllTasks();
         save();
     }
+    
     @Override
     public void removeAllEpics() {
         super.removeAllEpics();
         save();
     }
+    
     @Override
     public void removeAllSubtasks() {
         super.removeAllSubtasks();
         save();
     }
+    
     @Override
     public void removeTaskById(int taskId) {
         super.removeTaskById(taskId);
