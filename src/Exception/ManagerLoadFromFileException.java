@@ -1,4 +1,5 @@
 package exception;
+
 import java.io.File;
 import java.util.NoSuchElementException;
 
@@ -9,7 +10,7 @@ public class ManagerLoadFromFileException extends NoSuchElementException {
         super(message);
         this.file = file;
     }
-    
+
     public String getDetailMessage() {
         return String.format("%s из файла - %s", getMessage(), file.getAbsolutePath());
     }
