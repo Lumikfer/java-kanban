@@ -93,12 +93,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         super.addEpic(epic);
         save();
     }
-    
-    @Override
-    public void removeSubtaskById(int id) {
-        super.removeSubtaskById(id);
-        save();
-    }
 
     @Override
     public void removeEpicById(int epicId) {
@@ -129,4 +123,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         super.removeTaskById(taskId);
         save();
     }
+
+    @Override
+    public void removeSubtaskById(int id) {
+        super.removeSubtaskById(id);
+        save();
+    }
 }
+
