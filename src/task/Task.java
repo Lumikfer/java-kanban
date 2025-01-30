@@ -61,12 +61,7 @@ public class Task {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public static Task fromString(String value) {
-        String[] str = value.split(",");
-
-        return new Task(str[2], str[4], Status.valueOf(str[3]), Integer.parseInt(str[0]));
-    }
+    
 
     @Override
     public String toString() {

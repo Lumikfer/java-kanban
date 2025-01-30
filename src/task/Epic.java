@@ -38,12 +38,7 @@ public class Epic extends Task {
     public void removeSubtaskById(int id) {
         subtasksId.remove(Integer.valueOf(id));
     }
-
-    public static Epic fromString(String value) {
-        String[] str = value.split(",");
-        return new Epic(str[2], str[4], Status.valueOf(str[3]), Integer.parseInt(str[0]));
-    }
-
+    
     @Override
     public String toString() {
         String line = "" + id + "," + type + "," + name + "," + status + "," + description;

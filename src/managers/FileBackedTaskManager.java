@@ -14,7 +14,7 @@ import java.util.List;
 
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private File fileTask;
+    private final File fileTask;
 
     public FileBackedTaskManager() {
         this.fileTask = new File("task.txt");
@@ -43,11 +43,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 String subtask = TaskEnum.SUBTASK.toString();
                 String epic = TaskEnum.EPIC.toString();
                 if (s[1].equals(task)) {
-                    manager.addTask(Task.fromString(str));
+                    manager.addTask(TaskParser.fromStringTask(str));
                 } else if (s[1].equals(epic)) {
-                    manager.addEpic(Epic.fromString(str));
+                    manager.addEpic(TaskParser.fromStringEpic(str));
                 } else if (s[1].equals(subtask)) {
-                    manager.addSubtask(Subtask.fromString(str));
+                    manager.addSubtask(TaskParser.fromStringSub(str));
                 } else {
                     System.out.println("Eror");
                 }

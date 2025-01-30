@@ -25,12 +25,7 @@ public class Subtask extends Task {
     public int getEpicId() {
         return epicId;
     }
-
-    public static Subtask fromString(String value) {
-        String[] str = value.split(",");
-
-        return new Subtask(str[2], str[4], Integer.parseInt(str[0]), Status.valueOf(str[3]), Integer.parseInt(str[5]));
-    }
+    
 
     @Override
     public String toString() {
