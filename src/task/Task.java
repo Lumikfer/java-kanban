@@ -62,14 +62,12 @@ public class Task {
         this.description = description;
     }
     
-
     @Override
     public String toString() {
         String line = "" + id + "," + type + "," + name + "," + status + "," + description;
         return line;
     }
-
-
+    
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
