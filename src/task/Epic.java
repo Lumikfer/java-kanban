@@ -72,7 +72,7 @@ public class Epic extends Task {
         long durat = duration.toMinutes();
         String local = startTime.format(DATE_TIME_FORMATTER);
         String localend = endTime.format(DATE_TIME_FORMATTER);
-        String line = id+","+type+"," + name+"," + status+"," + description+","+duration+","+local+","+localend ;
+        String line = id + ","+type + "," + name+"," + status+"," + description + "," + duration + "," + local + "," + localend ;
         return line;
     }
 }
