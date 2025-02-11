@@ -6,10 +6,10 @@ import java.util.ArrayList;
 
 public class Epic extends Task {
     private ArrayList<Integer> subtasksId = new ArrayList<>();
+    protected TaskEnum type = TaskEnum.EPIC;
 
-    public Epic(String name, String description) {
+    public Epic(String name, String description, Status status, int id) {
         super(name, description, Status.NEW);
-
 
     }
 
@@ -17,12 +17,14 @@ public class Epic extends Task {
         super(name, description, Status.NEW, id);
     }
 
+    public Epic(String name, String description) {
+        super(name, description, Status.NEW);
+    }
+
     public void addSubtask(int subtaskId) {
         if (subtaskId != this.getId()) {
             subtasksId.add(subtaskId);
-
         }
-
     }
 
     public ArrayList<Integer> getSubtasksId() {
@@ -33,7 +35,14 @@ public class Epic extends Task {
         subtasksId.clear();
     }
 
+    @Override
+    public String toString() {
+        String line = "" + id + "," + type + "," + name + "," + status + "," + description;
+        return line;
+    }
+
     public void removeSubtaskById(int id) {
         subtasksId.remove(Integer.valueOf(id));
     }
+
 }
