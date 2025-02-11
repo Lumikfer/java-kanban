@@ -22,24 +22,22 @@ public class Epic extends Task {
     public Epic(String name, String description, int id,LocalDateTime startTime,Duration duration) {
         super(name, description, Status.NEW, id,startTime,duration);
     }
+    
     public Epic(String name, String description,LocalDateTime startTime,Duration duration) {
         super(name, description, Status.NEW,startTime,duration);
     }
+    
     public Epic(String name, String description, Status status,int id,LocalDateTime startTime,LocalDateTime endTime,Duration duration) {
         super(name,description,status);
         this.duration = duration;
         this.startTime = startTime;
         this.endTime = endTime;
-
-
     }
 
     public void addSubtask(int subtaskId) {
         if (subtaskId != this.getId()) {
             subtasksId.add(subtaskId);
-
         }
-
     }
 
     public ArrayList<Integer> getSubtasksId() {
@@ -56,7 +54,6 @@ public class Epic extends Task {
 
     public void setStartTime(LocalDateTime startTime) {
         this.startTime =startTime;
-
     }
 
     public void setEndTime(LocalDateTime endTime){
@@ -73,8 +70,7 @@ public class Epic extends Task {
     public LocalDateTime getStartTime() {
         return startTime;
     }
-
-
+    
     @Override
     public String toString() {
         String line = "" +id+","+type+"," + name+"," + status+"," + description;
