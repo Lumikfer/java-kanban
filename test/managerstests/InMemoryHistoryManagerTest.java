@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-
-
 class InMemoryHistoryManagerTest {
     InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
@@ -81,11 +79,11 @@ class InMemoryHistoryManagerTest {
         epic1.setId(7);
         Epic epic2 = new Epic("name", "dsc");
         epic2.setId(8);
-        Subtask subtask1 = new Subtask("name", "dsc", 999,Status.NEW);
+        Subtask subtask1 = new Subtask("name", "dsc", 999, Status.NEW);
         subtask1.setId(9);
-        Subtask subtask2 = new Subtask("name", "dsc", 999,Status.NEW);
+        Subtask subtask2 = new Subtask("name", "dsc", 999, Status.NEW);
         subtask2.setId(10);
-        Subtask subtask3 = new Subtask("name", "dsc", 999,Status.NEW);
+        Subtask subtask3 = new Subtask("name", "dsc", 999, Status.NEW);
         subtask3.setId(11);
 
         ArrayList<Task> list = new ArrayList<>();
@@ -100,7 +98,7 @@ class InMemoryHistoryManagerTest {
         list.add(subtask1);
         list.add(subtask2);
         list.add(subtask3);
-        
+
         assertEquals(list, historyManager.getHistory());
     }
 }

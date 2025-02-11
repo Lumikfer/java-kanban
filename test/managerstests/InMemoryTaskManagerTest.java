@@ -170,7 +170,6 @@ public class InMemoryTaskManagerTest {
     }
 
 
-
     @Test
     public void getHistoryTasks() {
         task3 = new Task("TestName9", "TestDescription9", startTime3, duration1);

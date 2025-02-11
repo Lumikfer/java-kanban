@@ -1,82 +1,41 @@
-import managers.*;
-import status.*;
-import task.*;
+import managers.FileBackedTaskManager;
+import managers.Managers;
+import managers.TaskManager;
+import status.Status;
+import task.Epic;
+import task.Subtask;
+import task.Task;
+
+import java.io.File;
+import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+
 
 public class Main {
     private static TaskManager taskManager = Managers.getDefault();
+    private static TaskManager back = Managers.getDefaultFileBackend();
 
-    public static void main(String[] args) {
-        addTasks();
-    }
+    public static void main(String[] args) throws IOException {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1; // месяцы начинаются с 0
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
 
-    private static void addTasks() {
-        Task task1 = new Task("asdasd", "door " +
-                "muiy", Status.NEW);
-        taskManager.addTask(task1);
-
-        Task updateTask1 = new Task("kernak", "sektar", Status.IN_PROGRESS,
-                task1.getId());
-        taskManager.updateTask(updateTask1);
-        taskManager.addTask(new Task("sadasd", "123", Status.NEW));
-
-
-        Epic doHomeWork = new Epic("321", "012");
-        taskManager.addEpic(doHomeWork);
-        Subtask doHomeWork1 = new Subtask("12", "3333", doHomeWork.getId(),
-                Status.DONE, doHomeWork.getId());
-        Subtask doHomeWork2 = new Subtask("2", "1111",
-                doHomeWork.getId(), Status.DONE, doHomeWork.getId());
-        Subtask doHomeWork3 = new Subtask("bueno", "123", doHomeWork.getId(),
-                Status.NEW, doHomeWork.getId());
-        taskManager.addSubtask(doHomeWork1);
-        taskManager.addSubtask(doHomeWork2);
-        taskManager.addSubtask(doHomeWork3);
-        System.out.println(taskManager.getEpics());
-        System.out.println("-".repeat(50));
-        System.out.println(taskManager.getSubtasks());
-        System.out.println("-".repeat(50));
-        Subtask doHomeWork4 = new Subtask("11111", "921",
-                doHomeWork3.getId(), Status.DONE, doHomeWork.getId());
-        taskManager.updateSubtask(doHomeWork4);
-        System.out.println(taskManager.getSubtasks());
-        System.out.println("-".repeat(50));
-        System.out.println(taskManager.getEpics());
-        System.out.println("-".repeat(50));
-        taskManager.removeSubtaskById(doHomeWork3.getId());
-        System.out.println(taskManager.getSubtasks());
-        System.out.println("-".repeat(50));
-        System.out.println(taskManager.getEpics());
-        taskManager.removeEpicById(doHomeWork1.getId());
-        System.out.println(taskManager.getEpics());
-        System.out.println(taskManager.getEpics());
-        Epic epic2 = new Epic("2222222", "333333", doHomeWork.getId());
-        taskManager.updateEpic(epic2);
-        System.out.println("-".repeat(50));
-        System.out.println(taskManager.getEpics());
-        System.out.println(taskManager.getSubtasks());
-        System.out.println(taskManager.getSubtasks());
-        Subtask subtask1 = new Subtask("012", "021", doHomeWork2.getId(), Status.NEW, doHomeWork.getId());
-        taskManager.updateSubtask(subtask1);
-        System.out.println("-".repeat(50));
-        System.out.println(taskManager.getSubtasks());
-        taskManager.addEpic(epic2);
-        System.out.println(taskManager.getEpics());
-        taskManager.removeEpicById(15);
-        System.out.println();
-        System.out.println(taskManager.getEpics());
-        System.out.println(taskManager.getSubtasks());
-        taskManager.removeSubtaskById(doHomeWork1.getId());
-        System.out.println(taskManager.getSubtasks());
-        System.out.println("-".repeat(50));
-        System.out.println(taskManager.getSubtasksForEpic(doHomeWork.getId()));
-        System.out.println("-".repeat(50));
-        System.out.println(taskManager.getHistory());
-        System.out.println(taskManager.getTasksById(task1.getId()));
-        System.out.println(taskManager.getSubtasksById(doHomeWork2.getId()));
-        System.out.println(taskManager.getSubtasksById(doHomeWork2.getId()));
-        System.out.println(taskManager.getEpicsById(doHomeWork1.getEpicId()));
-        System.out.println("-".repeat(50));
-        System.out.println(taskManager.getHistory());
-
+        File file = new File("task.txt");
+        taskManager.addTask(new Task("Выгулять собаку", "Погулять с Джеком 20 минут", LocalDateTime.now(), Duration.ofHours(1)));
+        taskManager.addTask(new Task("Выгулять собаку", "Погулять с Джеком 20 минут", LocalDateTime.now(), Duration.ofHours(1)));
+        taskManager.addTask(new Task("Выгулять собаку", "Погулять с Джеком 20 минут", LocalDateTime.now(), Duration.ofHours(1)));
+        taskManager.addTask(new Task("Выгулять собаку323", "Погулять с Джеком 20 минут", LocalDateTime.of(year, month, day, hour, minute), Duration.ofHours(1)));
+        // taskManager.addTask(new Task("Выгулять собаку", "Погулять с Джеком 20 минут",LocalDateTime.now(),Duration.ofMinutes(35)));
+        back.addTask(new Task("Выгулять собак21у", "Погулять с Джеком 20 минут", LocalDateTime.now(), Duration.ofHours(1)));
+        // FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(file);
+        System.out.println("Задачи:");
+        for (Task task : taskManager.getTasks()) {
+            System.out.println(task);
+        }
     }
 }

@@ -12,19 +12,20 @@ public class Subtask extends Task {
     protected LocalDateTime startTime;
     protected LocalDateTime endTime;
 
-    public Subtask(String name, String description, int id, Status status, int epicId,LocalDateTime startTime,Duration duration) {
-        super(name, description, status, id,startTime,duration);
+    public Subtask(String name, String description, int id, Status status, int epicId, LocalDateTime startTime, Duration duration) {
+        super(name, description, status, id, startTime, duration);
         this.epicId = epicId;
         this.endTime = startTime.plus(duration);
     }
 
-    public Subtask(String name, String description, int epicId, Status status,LocalDateTime startTime,Duration duration) {
-        super(name, description, status,startTime,duration);
+    public Subtask(String name, String description, int epicId, Status status, LocalDateTime startTime, Duration duration) {
+        super(name, description, status, startTime, duration);
         this.epicId = epicId;
         this.endTime = startTime.plus(duration);
     }
-    public Subtask(String name, String description, int epicId,LocalDateTime startTime,Duration duration) {
-        super(name, description,startTime,duration);
+
+    public Subtask(String name, String description, int epicId, LocalDateTime startTime, Duration duration) {
+        super(name, description, startTime, duration);
         this.epicId = epicId;
         this.status = Status.NEW;
         this.endTime = startTime.plus(duration);
@@ -47,7 +48,7 @@ public class Subtask extends Task {
         long durat = duration.toMinutes();
         String local = startTime.format(DATE_TIME_FORMATTER);
         String localend = endTime.format(DATE_TIME_FORMATTER);
-        String line = id + ","+type+"," + name+"," + status+"," + description + "," + epicId+"," + duration + "," + local + "," + localend ;
+        String line = id + "," + type + "," + name + "," + status + "," + description + "," + epicId + "," + duration + "," + local + "," + localend;
         return line;
     }
 }
