@@ -16,8 +16,8 @@ public class TaskParser {
                 Status.valueOf(str[3]),
                 Integer.parseInt(str[0]),
                 LocalDateTime.parse(str[6],
-                        DateTimeFormatter.ofPattern("HH:mm dd.MM.yy"))
-                , Duration.parse(str[5])
+                        DateTimeFormatter.ofPattern("HH:mm dd.MM.yy")),
+                 Duration.parse(str[5])
         );
     }
 
