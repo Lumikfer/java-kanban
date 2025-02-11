@@ -14,46 +14,38 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Subtask> subtasks = new HashMap<>();
     private final HistoryManager historyManager = Managers.getDefaultHistory();
     private int nextID = 0;
-
-
+    
     @Override
     public void addTask(Task task) {
-        if(intersectionеTask(task) == false)
-        {
+        if (intersectionеTask(task) == false) {
             System.out.println("низя");
             return;
         }
         task.setId(nextID++);
         tasks.put(task.getId(), task);
-
     }
-    public boolean intersectionеTask(Task task){
+
+    public boolean intersectionеTask(Task task) {
         TreeSet<Task> tasksk = getPrioritizedTasks();
         tasksk.stream()
-                .filter(n->n.getStartTime().isBefore(task.getStartTime()))
-                .filter(n->n.getEndTime().isAfter(task.getEndTime()))
+                .filter(n -> n.getStartTime().isBefore(task.getStartTime()))
+                .filter(n -> n.getEndTime().isAfter(task.getEndTime()))
                 .collect(Collectors.toSet());
         return tasksk.isEmpty();
-
-
-
     }
 
     public boolean intersectionеEpic(Epic epic) {
         TreeSet<Epic> epicsc = getPrioritizedEpic();
         epicsc.stream()
-                .filter(n->n.getStartTime().isBefore(epic.getStartTime()))
-                .filter(n->n.getEndTime().isAfter(epic.getEndTime()))
+                .filter(n -> n.getStartTime().isBefore(epic.getStartTime()))
+                .filter(n -> n.getEndTime().isAfter(epic.getEndTime()))
                 .collect(Collectors.toSet());
         return epicsc.isEmpty();
-
-
-
     }
 
     @Override
     public void addEpic(Epic epic) {
-        if(intersectionеEpic(epic) == false){
+        if (intersectionеEpic(epic) == false) {
             System.out.println("низя");
             return;
         }
@@ -281,7 +273,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public TreeSet<Task> getPrioritizedTasks() {
         List<Task> tas = tasks.values().stream()
-                .filter(ta ->!ta.getEndTime().equals(null) )
+                .filter(ta -> !ta.getEndTime().equals(null))
                 .collect(Collectors.toList());
         Comparator<Task> comparator = new Comparator<Task>() {
 
@@ -299,7 +291,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public TreeSet<Epic> getPrioritizedEpic() {
         List<Epic> tas = epics.values().stream()
-                .filter(ta ->!ta.getEndTime().equals(null) )
+                .filter(ta -> !ta.getEndTime().equals(null))
                 .collect(Collectors.toList());
         Comparator<Task> comparator = new Comparator<Task>() {
 
