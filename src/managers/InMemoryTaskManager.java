@@ -1,14 +1,11 @@
 package managers;
 
 import status.Status;
-import task.Epic;
-import task.Subtask;
-import task.Task;
+import task.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class InMemoryTaskManager implements TaskManager {
@@ -21,14 +18,49 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addTask(Task task) {
+        if(intersectionеTask(task) == false)
+        {
+            System.out.println("низя");
+            return;
+        }
         task.setId(nextID++);
         tasks.put(task.getId(), task);
+
+    }
+    public boolean intersectionеTask(Task task){
+        TreeSet<Task> tasksk = getPrioritizedTasks();
+        tasksk.stream()
+                .filter(n->n.getStartTime().isBefore(task.getStartTime()))
+                .filter(n->n.getEndTime().isAfter(task.getEndTime()))
+                .collect(Collectors.toSet());
+        return tasksk.isEmpty();
+
+
+
+    }
+
+    public boolean intersectionеEpic(Epic epic) {
+        TreeSet<Epic> epicsc = getPrioritizedEpic();
+        epicsc.stream()
+                .filter(n->n.getStartTime().isBefore(epic.getStartTime()))
+                .filter(n->n.getEndTime().isAfter(epic.getEndTime()))
+                .collect(Collectors.toSet());
+        return epicsc.isEmpty();
+
+
+
     }
 
     @Override
     public void addEpic(Epic epic) {
+        if(intersectionеEpic(epic) == false){
+            System.out.println("низя");
+            return;
+        }
         epic.setId(nextID++);
         epics.put(epic.getId(), epic);
+        epic.setStartTime(subtasks.get(0).getStartTime());
+        epic.setEndTime(subtasks.get(subtasks.size()).getEndTime());
     }
 
     @Override
@@ -42,6 +74,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.addSubtask(subtask.getId());
         subtasks.put(subtask.getId(), subtask);
         updateEpicStatus(epic);
+
     }
 
     @Override
@@ -51,6 +84,7 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
         tasks.put(task.getId(), task);
+
 
     }
 
@@ -243,4 +277,39 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setStatus(Status.IN_PROGRESS);
         }
     }
-}
+
+    @Override
+    public TreeSet<Task> getPrioritizedTasks() {
+        List<Task> tas = tasks.values().stream()
+                .filter(ta ->!ta.getEndTime().equals(null) )
+                .collect(Collectors.toList());
+        Comparator<Task> comparator = new Comparator<Task>() {
+
+            @Override
+            public int compare(Task o1, Task o2) {
+                return o1.getStartTime().compareTo(o2.getStartTime());
+            }
+        };
+
+        TreeSet<Task> set = new TreeSet<>(comparator);
+        set.addAll(tas);
+        return set;
+    }
+
+    @Override
+    public TreeSet<Epic> getPrioritizedEpic() {
+        List<Epic> tas = epics.values().stream()
+                .filter(ta ->!ta.getEndTime().equals(null) )
+                .collect(Collectors.toList());
+        Comparator<Task> comparator = new Comparator<Task>() {
+
+            @Override
+            public int compare(Task o1, Task o2) {
+                return o1.getStartTime().compareTo(o2.getStartTime());
+            }
+        };
+
+        TreeSet<Epic> set = new TreeSet<>(comparator);
+        set.addAll(tas);
+        return set;
+    }

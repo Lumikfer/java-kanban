@@ -1,62 +1,46 @@
-package taskstests;
+package test;
 
-import status.Status;
-import task.Task;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import status.Status;
-import task.Task;
 import org.junit.jupiter.api.Test;
+import status.*;
+import task.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-class TaskTest {
-
+public class TaskTest {
     Task task1;
-
+    Task task2;
+    Task task3;
+    Duration duration1 = Duration.ofMinutes(100);
+    LocalDateTime startTime1 = LocalDateTime.of(LocalDate.of(2025, 2, 4),
+            LocalTime.of(10, 0));
+    private Object StatusTask;
+    
     @BeforeEach
     void setUp() {
-        task1 = new Task("name", "description", Status.NEW);
+        task1 = new Task("TestName1", "TestDescription1", Status.NEW, 1, startTime1, duration1);
+        task2 = new Task("TestName2", "TestDescription2", Status.NEW, 2, startTime1, duration1);
+        task3 = new Task("TestName3", "TestDescription3", Status.NEW, 1, startTime1, duration1);
+
     }
 
     @Test
-    void GetterAndSetterForId() {
-        task1.setId(1);
-        assertEquals(1, task1.getId());
+    void shouldEqualsIsSameIds() {
+        Assertions.assertEquals(task1, task3);
     }
 
     @Test
-    void GetterAndSetterForName() {
-        task1.setName("new name");
-        assertEquals("new name", task1.getName());
+    void shouldNotEqualsIsDifferentIds() {
+        Assertions.assertNotEquals(task1, task2);
     }
 
     @Test
-    void GetterAndSetterForDescription() {
-        task1.setDescription("new description");
-        assertEquals("new description", task1.getDescription());
+    void taskToString() {
+        Assertions.assertEquals("1,TASK,TestName1,NEW,TestDescription1,PT1H40M,10:00 04.02.25,11:40 04.02.25", task1.toString());
     }
-
-    @Test
-    void GetterAndSetterForStatus() {
-        task1.setStatus(Status.DONE);
-        assertEquals(Status.DONE, task1.getStatus());
-    }
-
-    @Test
-    public void EqualsAndHashCode() {
-        Task task1 = new Task("name", "dsc", Status.NEW);
-        Task task2 = new Task("name", "dsc", Status.NEW);
-        task1.setId(1);
-        task2.setId(1);
-
-        assertEquals(task1, task2);
-        assertEquals(task1.hashCode(), task2.hashCode());
-
-        task2.setId(2);
-        assertNotEquals(task1, task2);
-    }
+    
 }

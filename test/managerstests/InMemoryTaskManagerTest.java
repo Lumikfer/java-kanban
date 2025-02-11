@@ -1,185 +1,298 @@
-package managerstests;
+package test;
 
 import managers.InMemoryTaskManager;
-import managers.Managers;
-import status.Status;
-import task.Epic;
-import task.Subtask;
-import task.Task;
-import managers.TaskManager;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import status.*;
+import task.*;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class InMemoryTaskManagerTest {
-
-    InMemoryTaskManager taskManager;
+public class InMemoryTaskManagerTest {
+    InMemoryTaskManager manager;
+    Task task1;
+    Task task2;
+    Task task3;
+    Task task4;
+    Epic epic1;
+    Epic epic2;
+    Epic epic3;
+    Subtask subtask1;
+    Subtask subtask2;
+    Subtask subtask3;
+    Subtask subtask4;
+    Subtask subtask5;
+    Subtask subtask6;
+    Duration duration1 = Duration.ofMinutes(100);
+    LocalDateTime startTime1 = LocalDateTime.of(LocalDate.of(2025, 2, 4),
+            LocalTime.of(10, 0));
+    LocalDateTime startTime2 = LocalDateTime.of(LocalDate.of(2025, 2, 5),
+            LocalTime.of(10, 0));
+    LocalDateTime startTime3 = LocalDateTime.of(LocalDate.of(2025, 2, 6),
+            LocalTime.of(10, 0));
+    LocalDateTime startTime4 = LocalDateTime.of(LocalDate.of(2025, 2, 7),
+            LocalTime.of(10, 0));
+    LocalDateTime startTime5 = LocalDateTime.of(LocalDate.of(2025, 2, 8),
+            LocalTime.of(10, 0));
 
     @BeforeEach
-    void setUp() {
-        taskManager = new InMemoryTaskManager();
-
-        Task task1 = new Task("name1", "dsc1", Status.NEW);
-        Task task2 = new Task("name2", "dsc2", Status.NEW);
-        Task task3 = new Task("name3", "dsc3", Status.NEW);
-
-        Epic epic1 = new Epic("epic1", "dsc1");
-        Epic epic2 = new Epic("epic2", "dsc2");
-
-        taskManager.addTask(task1);
-        taskManager.addTask(task2);
-        taskManager.addTask(task3);
-
-        taskManager.addEpic(epic1);
-        taskManager.addEpic(epic2);
-
-        Subtask subtask1 = new Subtask("sbt1", "dsc1", 4,Status.NEW);
-        Subtask subtask2 = new Subtask("sbt2", "dsc2",4,Status.NEW);
-
-        taskManager.addSubtask(subtask1);
-        taskManager.addSubtask(subtask2);
-    }
-
-    @Test
-    void getTasks() {
-        Task task1 = new Task("name1", "dsc1", Status.NEW);
-        task1.setId(0);
-        Task task2 = new Task("name2", "dsc2", Status.NEW);
-        task2.setId(1);
-        Task task3 = new Task("name3", "dsc3", Status.NEW);
-        task3.setId(2);
-
-        ArrayList<Task> list = new ArrayList<>();
-        list.add(task1);
-        list.add(task2);
-        list.add(task3);
-
-        assertEquals(list, taskManager.getTasks());
-    }
-
-    @Test
-    void getEpics() {
-        Epic epic1 = new Epic("epic1", "dsc1");
-        epic1.setId(3);
-        Epic epic2 = new Epic("epic2", "dsc2");
-        epic2.setId(4);
-
-        ArrayList<Epic> list = new ArrayList<>();
-        list.add(epic1);
-        list.add(epic2);
-
-        assertEquals(list, taskManager.getEpics());
-    }
-
-    @Test
-    void getSubtasks() {
-        Subtask subtask1 = new Subtask("sbt1", "dsc1", 4, Status.NEW);
-        subtask1.setId(5);
-        Subtask subtask2 = new Subtask("sbt2", "dsc2", 4, Status.NEW);
-        subtask2.setId(6);
-
-        ArrayList<Subtask> list = new ArrayList<>();
-        list.add(subtask1);
-        list.add(subtask2);
-
-        assertEquals(list, taskManager.getSubtasks());
-    }
-
-    @Test
-    void rmvAllEpics() {
-        ArrayList<Epic> list2 = new ArrayList<>();
-        taskManager.removeAllEpics();
-        assertEquals(list2, taskManager.getEpics());
-    }
-
-    @Test
-    void rmvAllSubtasks() {
-        ArrayList<Subtask> list3 = new ArrayList<>();
-        taskManager.removeAllSubtasks();
-        assertEquals(list3, taskManager.getSubtasks());
-    }
-
-    @Test
-    void getTaskById() {
-        Task task1 = new Task("name", "dsc", Status.NEW);
-        task1.setId(1);
-        assertEquals(task1, taskManager.getTasksById(1));
-    }
-
-    @Test
-    void getSubtaskById() {
-        Subtask subtask1 = new Subtask("name", "dsc", 4,Status.NEW);
-        subtask1.setId(6);
-        assertEquals(subtask1, taskManager.getSubtasksById(6));
-    }
-
-    @Test
-    void getEpicById() {
-        Epic epic1 = new Epic("name", "dsc");
-        epic1.setId(4);
-        assertEquals(epic1, taskManager.getEpicsById(4));
-    }
-
-
-    @Test
-    void updTask() {
-        Task task1 = new Task("new name", "new  dsc", Status.DONE);
-        task1.setId(1);
-
-        taskManager.updateTask(task1);
-        assertEquals(task1, taskManager.getTasksById(1));
-    }
-
-    @Test
-    void updEpic() {
-        Epic epic1 = new Epic("new name", "new  dsc");
-        epic1.setId(4);
-        taskManager.updateEpic(epic1);
-        assertEquals(epic1, taskManager.getEpicsById(4));
-    }
-
-    @Test
-    void updSubtask() {
-        Subtask subtask1 = new Subtask("new name", " new dsc",4, Status.DONE);
-        subtask1.setId(6);
-        taskManager.updateTask(subtask1);
-        assertEquals(subtask1, taskManager.getSubtasksById(6));
+    public void setUp() {
+        manager = new InMemoryTaskManager();
+        task1 = new Task("TestName1", "TestDescription1", startTime1, duration1);
+        task2 = new Task("TestName4", "TestDescription4", startTime2, duration1);
 
     }
 
     @Test
-    void rmvTaskById() {
-        Task task1 = new Task("name", "dsc", Status.NEW);
-        task1.setId(0);
-        Task task2 = new Task("name", "dsc", Status.NEW);
-        task2.setId(1);
+    public void createIdForTask() {
+        manager.addTask(task1);
+        manager.addEpic(epic1);
+        subtask1 = new Subtask("TestName3", "TestDescription3", epic1.getId(), startTime3, duration1);
+        manager.addSubtask(subtask1);
+        Assertions.assertEquals(1, task1.getId());
+        Assertions.assertEquals(2, epic1.getId());
+        Assertions.assertEquals(3, subtask1.getId());
+    }
 
-        ArrayList<Task> list = new ArrayList<>();
-        list.add(task1);
-        list.add(task2);
+    @Test
+    public void addTasks() {
+        manager.addTask(task1);
+        manager.addTask(task2);
+        manager.addEpic(epic1);
+        manager.addEpic(epic2);
+        subtask1 = new Subtask("TestName3", "TestDescription3", epic1.getId(), startTime1, duration1);
+        manager.addSubtask(subtask1);
+        Assertions.assertEquals(2, manager.getTasks().size());
+        Assertions.assertEquals(2, manager.getEpics().size());
+        Assertions.assertEquals(1, manager.getSubtasks().size());
 
-        taskManager.removeTaskById(2);
+    }
 
-        assertEquals(list, taskManager.getTasks());
+    @Test
+    public void addTaskWithTimeIntersection() {
+        manager.addTask(task1);
+        task2 = new Task("TestName2", "TestDescription2", LocalDateTime.of(LocalDate.of(2025, 2, 4),
+                LocalTime.of(10, 5)), duration1);
+        manager.addTask(task2);
+        Assertions.assertEquals(1, manager.getTasks().size());
+        task3 = new Task("TestName3", "TestDescription3", startTime1, duration1);
+        Assertions.assertEquals(1, manager.getTasks().size());
+        task4 = new Task("TestName4", "TestDescription4", startTime2, duration1);
+        manager.addTask(task4);
+        Assertions.assertEquals(2, manager.getTasks().size());
+    }
+
+    @Test
+    public void addSubtaskWithTimeIntersection() {
+        manager.addEpic(epic1);
+        subtask1 = new Subtask("TestName3", "TestDescription3", epic1.getId(), startTime1, duration1);
+        manager.addSubtask(subtask1);
+        subtask2 = new Subtask("TestName4", "TestDescription4", epic1.getId(), LocalDateTime.of(LocalDate.of(2025, 2, 4),
+                LocalTime.of(10, 5)), duration1);
+        manager.addSubtask(subtask2);
+        Assertions.assertEquals(1, manager.getSubtasks().size());
+        subtask3 = new Subtask("TestName3", "TestDescription3", epic1.getId(), startTime1, duration1);
+        Assertions.assertEquals(1, manager.getSubtasks().size());
+        subtask4 = new Subtask("TestName4", "TestDescription4", epic1.getId(), startTime2, duration1);
+        manager.addSubtask(subtask4);
+        Assertions.assertEquals(2, manager.getSubtasks().size());
+    }
+
+    @Test
+    public void addSubtaskInEpic() {
+        manager.addEpic(epic1);
+        subtask1 = new Subtask("TestName3", "TestDescription3", epic1.getId(), startTime1, duration1);
+        subtask2 = new Subtask("TestName7", "TestDescription7", epic1.getId(), startTime1, duration1);
+        manager.addSubtask(subtask1);
+        manager.addSubtask(subtask2);
+        Assertions.assertEquals(1, subtask1.getEpicId());
+        Assertions.assertEquals(1, subtask2.getEpicId());
+
 
     }
 
 
     @Test
-    void rmvSubtaskById() {
-        Subtask subtask1 = new Subtask("sbt", "dsc",4,Status.NEW);
-        subtask1.setId(6);
-
-        ArrayList<Subtask> list = new ArrayList<>();
-        list.add(subtask1);
-
-        taskManager.removeSubtaskById(5);
-
-        assertEquals(list, taskManager.getSubtasks());
+    public void getPrioritizedTasks() {
+        task1 = new Task("TestName1", "TestDescription1", startTime1, duration1);
+        task2 = new Task("TestName2", "TestDescription2", startTime2, duration1);
+        task3 = new Task("TestName3", "TestDescription3", startTime3, duration1);
+        manager.addTask(task2);
+        manager.addTask(task1);
+        manager.addTask(task3);
+        ArrayList<Task> prioritizedTasks = new ArrayList<>(manager.getPrioritizedTasks());
+        ArrayList<Task> expectedPrioritizedTasks = new ArrayList<>();
+        expectedPrioritizedTasks.add(task1);
+        expectedPrioritizedTasks.add(task2);
+        expectedPrioritizedTasks.add(task3);
+        Assertions.assertEquals(expectedPrioritizedTasks, prioritizedTasks);
     }
 
+    @Test
+    public void clearTasks() {
+        manager.addTask(task1);
+        manager.addTask(task2);
+        manager.addEpic(epic1);
+        manager.addEpic(epic2);
+        subtask1 = new Subtask("TestName3", "TestDescription3", epic1.getId(), startTime1, duration1);
+        subtask2 = new Subtask("TestName7", "TestDescription7", epic2.getId(), startTime1, duration1);
+        manager.addSubtask(subtask1);
+        manager.addSubtask(subtask2);
+        manager.removeAllTasks();
+        Assertions.assertEquals(0, manager.getTasks().size());
+        manager.removeAllSubtasks();
+        Assertions.assertEquals(0, manager.getSubtasks().size());
+        manager.removeAllEpics();
+        Assertions.assertEquals(0, manager.getEpics().size());
+    }
+
+    @Test
+    public void clearEpicsWithSubtasks() {
+        manager.addTask(task1);
+        manager.addTask(task2);
+        manager.addEpic(epic1);
+        manager.addEpic(epic2);
+        subtask1 = new Subtask("TestName3", "TestDescription3", epic1.getId(), startTime1, duration1);
+        subtask2 = new Subtask("TestName7", "TestDescription7", epic2.getId(), startTime1, duration1);
+        subtask3 = new Subtask("TestName8", "TestDescription8", epic2.getId(), startTime1, duration1);
+        manager.addSubtask(subtask1);
+        manager.addSubtask(subtask2);
+        manager.addSubtask(subtask3);
+        manager.removeAllEpics();
+        Assertions.assertEquals(0, manager.getEpics().size());
+        Assertions.assertEquals(0, manager.getSubtasks().size());
+    }
+
+
+
+    @Test
+    public void getHistoryTasks() {
+        task3 = new Task("TestName9", "TestDescription9", startTime3, duration1);
+        task4 = new Task("TestName10", "TestDescription10", startTime4, duration1);
+
+        manager.addTask(task1);
+        manager.addTask(task2);
+        manager.addTask(task3);
+        manager.addTask(task4);
+        manager.addEpic(epic1);
+        manager.addEpic(epic2);
+
+        subtask2 = new Subtask("TestName2", "TestDescription2", epic1.getId(), startTime1, duration1);
+        subtask3 = new Subtask("TestName3", "TestDescription3", epic1.getId(), startTime2, duration1);
+        subtask4 = new Subtask("TestName4", "TestDescription4", epic2.getId(), startTime3, duration1);
+        subtask5 = new Subtask("TestName5", "TestDescription5", epic2.getId(), startTime4, duration1);
+        subtask6 = new Subtask("TestName6", "TestDescription6", epic3.getId(), startTime5, duration1);
+
+        manager.addSubtask(subtask2);
+        manager.addSubtask(subtask3);
+        manager.addSubtask(subtask4);
+        manager.addSubtask(subtask5);
+        manager.addSubtask(subtask6);
+
+        Assertions.assertTrue(manager.getHistory().isEmpty());
+
+        manager.getTasksById(1);
+        manager.getEpicsById(5);
+        manager.getSubtasksById(8);
+        List<Task> expectedHistory = new ArrayList<>();
+        expectedHistory.add(task1);
+        expectedHistory.add(epic1);
+        expectedHistory.add(subtask2);
+        Assertions.assertEquals(3, manager.getHistory().size());
+        Assertions.assertEquals(expectedHistory, manager.getHistory());
+
+        manager.getTasksById(2);
+        manager.getTasksById(3);
+        manager.getEpicsById(6);
+        manager.getSubtasksById(10);
+        manager.getEpicsById(7);
+        manager.getSubtasksById(9);
+        manager.getSubtasksById(12);
+        manager.getSubtasksById(11);
+        Assertions.assertEquals(11, manager.getHistory().size());
+        Assertions.assertEquals(task1, manager.getHistory().getFirst());
+        Assertions.assertEquals(subtask5, manager.getHistory().getLast());
+    }
+
+    @Test
+    public void deleteTaskdeleteTaskInHistory() {
+        manager.addTask(task1);
+        manager.addTask(task2);
+        manager.addEpic(epic1);
+        manager.addEpic(epic2);
+        subtask2 = new Subtask("TestName2", "TestDescription2", epic1.getId(), startTime1, duration1);
+        subtask3 = new Subtask("TestName3", "TestDescription3", epic1.getId(), startTime1, duration1);
+        subtask4 = new Subtask("TestName4", "TestDescription4", epic2.getId(), startTime1, duration1);
+        subtask5 = new Subtask("TestName5", "TestDescription5", epic2.getId(), startTime1, duration1);
+        manager.addSubtask(subtask2);
+        manager.addSubtask(subtask3);
+        manager.addSubtask(subtask4);
+        manager.addSubtask(subtask5);
+        ArrayList<Task> expectedHistory = new ArrayList<>();
+        expectedHistory.add(task1);
+        expectedHistory.add(subtask4);
+        expectedHistory.add(subtask5);
+
+        manager.getTasksById(1);
+        manager.getTasksById(2);
+        manager.getEpicsById(3);
+        manager.getSubtasksById(5);
+        manager.getSubtasksById(6);
+        manager.getSubtasksById(7);
+        manager.getSubtasksById(8);
+
+        Assertions.assertEquals(7, manager.getHistory().size());
+
+        manager.removeEpicById(3);
+        manager.removeTaskById(2);
+        Assertions.assertEquals(3, manager.getHistory().size());
+        Assertions.assertEquals(expectedHistory, manager.getHistory());
+    }
+
+    @Test
+    public void clearTasksAndHistory() {
+        manager.addTask(task1);
+        manager.addTask(task2);
+        manager.addEpic(epic1);
+        subtask2 = new Subtask("TestName2", "TestDescription2", epic1.getId(), startTime1, duration1);
+        subtask3 = new Subtask("TestName3", "TestDescription3", epic1.getId(), startTime1, duration1);
+        manager.addSubtask(subtask2);
+        manager.addSubtask(subtask3);
+        manager.getTasksById(1);
+        manager.getTasksById(2);
+        manager.getEpicsById(3);
+        manager.getSubtasksById(4);
+        manager.getSubtasksById(5);
+        ArrayList<Task> expectedHistory = new ArrayList<>();
+        expectedHistory.add(epic1);
+        expectedHistory.add(subtask2);
+        expectedHistory.add(subtask3);
+        manager.removeAllTasks();
+        Assertions.assertEquals(3, manager.getHistory().size());
+        Assertions.assertEquals(expectedHistory, manager.getHistory());
+        manager.removeAllEpics();
+        expectedHistory.remove(epic1);
+        expectedHistory.remove(subtask2);
+        expectedHistory.remove(subtask3);
+        Assertions.assertTrue(manager.getHistory().isEmpty());
+        Assertions.assertEquals(expectedHistory, manager.getHistory());
+        manager.addEpic(epic3);
+        subtask3 = new Subtask("TestName4", "TestDescription4", epic3.getId(), startTime1, duration1);
+        subtask4 = new Subtask("TestName5", "TestDescription5", epic3.getId(), startTime1, duration1);
+        manager.addSubtask(subtask3);
+        manager.addSubtask(subtask4);
+        manager.getEpicsById(6);
+        manager.getSubtasksById(7);
+        manager.getSubtasksById(8);
+        expectedHistory.add(epic3);
+        manager.removeAllSubtasks();
+        Assertions.assertEquals(1, manager.getHistory().size());
+        Assertions.assertEquals(expectedHistory, manager.getHistory());
+    }
 }
