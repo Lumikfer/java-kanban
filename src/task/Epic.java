@@ -14,19 +14,19 @@ public class Epic extends Task {
     protected LocalDateTime startTime;
 
     public Epic(String name, String description, Status status, int id, LocalDateTime startTime, Duration duration) {
-        super(name, description, Status.NEW,startTime,duration);
+        super(name, description, Status.NEW, startTime, duration);
     }
 
-    public Epic(String name, String description, int id,LocalDateTime startTime,Duration duration) {
-        super(name, description, Status.NEW, id,startTime,duration);
+    public Epic(String name, String description, int id, LocalDateTime startTime, Duration duration) {
+        super(name, description, Status.NEW, id, startTime, duration);
     }
 
-    public Epic(String name, String description,LocalDateTime startTime,Duration duration) {
-        super(name, description, Status.NEW,startTime,duration);
+    public Epic(String name, String description, LocalDateTime startTime, Duration duration) {
+        super(name, description, Status.NEW, startTime, duration);
     }
 
-    public Epic(String name, String description,int id) {
-        super(name,description,id);
+    public Epic(String name, String description, int id) {
+        super(name, description, id);
     }
 
     public void addSubtask(int subtaskId) {
@@ -59,7 +59,7 @@ public class Epic extends Task {
         return endTime;
     }
 
-    public  Duration getDuration() {
+    public Duration getDuration() {
         return duration;
     }
 
@@ -72,7 +72,7 @@ public class Epic extends Task {
         long durat = duration.toMinutes();
         String local = startTime.format(DATE_TIME_FORMATTER);
         String localend = endTime.format(DATE_TIME_FORMATTER);
-        String line = id + "," + type + "," + name+"," + status+"," + description + "," + duration + "," + local + "," + localend ;
+        String line = id + "," + type + "," + name + "," + status + "," + description + "," + duration + "," + local + "," + localend;
         return line;
     }
 }
