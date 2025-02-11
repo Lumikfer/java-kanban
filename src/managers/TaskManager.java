@@ -1,54 +1,56 @@
-package managers;
+package manager;
 
 import task.Epic;
 import task.Subtask;
 import task.Task;
 
 import java.util.List;
-import java.util.TreeSet;
 
 public interface TaskManager {
-    void addTask(Task task);
 
-    void addEpic(Epic epic);
+    Task createTask(String name, String description, long duration, String startTime);
 
-    void addSubtask(Subtask subtask);
+    Epic createEpicTask(String name, String description, long duration, String startTime);
 
-    void updateTask(Task task);
+    Subtask createSubTask(Epic task, String name, String description, long duration, String startTime);
 
-    void updateEpic(Epic epic);
+    List<Task> getListTasks();
 
-    void updateSubtask(Subtask subtask);
+    List<Task> getListEpicTasks();
 
-    Task getTasksById(int taskId);
+    List<Task> getListSubTasks();
 
-    Epic getEpicsById(int epicId);
+    Task getTaskById(Long id);
 
-    Subtask getSubtasksById(int subtaskId);
+    Subtask getSubTaskById(Long id);
 
-    List<Task> getTasks();
+    Epic getEpicTaskById(Long id);
 
-    List<Epic> getEpics();
+    Task updateTask(Task task, String name, String description, long duration, String startTime);
 
-    List<Subtask> getSubtasks();
+    Epic updateEpicTask(Epic task, String name, String description, long duration, String startTime);
 
-    void removeTaskById(int taskId);
+    Subtask updateSubTask(Subtask task, String name, String description, long duration, String startTime);
 
-    void removeEpicById(int epicId);
+    Task deleteTask(Task task);
 
-    void removeSubtaskById(int subtaskId);
+    Epic deleteEpicTask(Epic task);
 
-    void removeAllTasks();
+    Subtask deleteSubTask(Subtask task);
 
-    void removeAllEpics();
+    Task deleteTaskById(Long id);
 
-    void removeAllSubtasks();
+    Epic deleteEpicTaskById(Long id);
 
-    List<Subtask> getSubtasksForEpic(int epicId);
+    Subtask deleteSubTaskById(Long id);
 
     List<Task> getHistory();
 
-    TreeSet<Task> getPrioritizedTasks();
+    void clearListTasks();
 
-    TreeSet<Epic> getPrioritizedEpic();
+    void clearListEpicTasks();
+
+    void clearListSubTasks(Epic epic);
+
+    List<Task> getPrioritizedTasks();
 }

@@ -1,54 +1,39 @@
 package task;
 
-import status.Status;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Subtask extends Task {
-    private int epicId;
-    protected TaskEnum type = TaskEnum.SUBTASK;
-    protected Duration duration;
-    protected LocalDateTime startTime;
-    protected LocalDateTime endTime;
+    private Epic epicTask;
 
-    public Subtask(String name, String description, int id, Status status, int epicId, LocalDateTime startTime, Duration duration) {
-        super(name, description, status, id, startTime, duration);
-        this.epicId = epicId;
-        this.endTime = startTime.plus(duration);
+    public Subtask(long id, String name, String description, long duration, String startTime) {
+        super(id, name, description, duration, startTime);
+        this.taskType = TaskType.SUBTASK;
     }
 
-    public Subtask(String name, String description, int epicId, Status status, LocalDateTime startTime, Duration duration) {
-        super(name, description, status, startTime, duration);
-        this.epicId = epicId;
-        this.endTime = startTime.plus(duration);
+    public Epic getEpicTask() {
+        return epicTask;
     }
 
-    public Subtask(String name, String description, int epicId, LocalDateTime startTime, Duration duration) {
-        super(name, description, startTime, duration);
-        this.epicId = epicId;
-        this.status = Status.NEW;
-        this.endTime = startTime.plus(duration);
+    public void setEpicTask(Epic epicTask) {
+        this.epicTask = epicTask;
     }
 
-    public int getEpicId() {
-        return epicId;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
+    @Override
+    public void setStatus(Status status) {
+        super.setStatus(status);
+        epicTask.updateStatus();
     }
 
     @Override
     public String toString() {
-        long durat = duration.toMinutes();
-        String local = startTime.format(DATE_TIME_FORMATTER);
-        String localend = endTime.format(DATE_TIME_FORMATTER);
-        String line = id + "," + type + "," + name + "," + status + "," + description + "," + epicId + "," + duration + "," + local + "," + localend;
-        return line;
+        return super.toString() + "\n" + "\towned: EpicTask Id#" + epicTask.getId();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Subtask item = (Subtask) o;
+        return id == item.id && Objects.equals(name, item.name) && Objects.equals(description, item.description);
     }
 }

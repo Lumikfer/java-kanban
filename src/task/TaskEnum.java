@@ -1,7 +1,7 @@
 package task;
 
-public enum TaskEnum {
+public enum TaskType {
     TASK,
     SUBTASK,
-    EPIC;
+    EPIC
 }

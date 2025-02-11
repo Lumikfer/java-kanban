@@ -1,78 +1,111 @@
 package task;
 
-import status.Status;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subtasksId = new ArrayList<>();
-    protected TaskEnum type = TaskEnum.EPIC;
-    protected Duration duration;
-    protected LocalDateTime endTime;
-    protected LocalDateTime startTime;
+    private final HashMap<Long, Subtask> subTasks = new HashMap<>();
+    private LocalDateTime endTime;
 
-    public Epic(String name, String description, Status status, int id, LocalDateTime startTime, Duration duration) {
-        super(name, description, Status.NEW, startTime, duration);
+    public Epic(long id, String name, String description, long duration, String startTime) {
+        super(id, name, description, duration, startTime);
+        this.taskType = TaskType.EPIC;
     }
 
-    public Epic(String name, String description, int id, LocalDateTime startTime, Duration duration) {
-        super(name, description, Status.NEW, id, startTime, duration);
+    public HashMap<Long, Subtask> getSubTasks() {
+        return subTasks;
     }
 
-    public Epic(String name, String description, LocalDateTime startTime, Duration duration) {
-        super(name, description, Status.NEW, startTime, duration);
+    public void addSubTask(Subtask subtask) {
+        subtask.setEpicTask(this);
+        subTasks.put(subtask.getId(), subtask);
     }
 
-    public Epic(String name, String description, int id) {
-        super(name, description, id);
+    public Subtask removeSubTask(Subtask subtask) {
+        return subTasks.remove(subtask.getId());
     }
 
-    public void addSubtask(int subtaskId) {
-        if (subtaskId != this.getId()) {
-            subtasksId.add(subtaskId);
+    public ArrayList<Subtask> getListSubTask() {
+        return new ArrayList<>(subTasks.values());
+    }
+
+    public void updateStatus() {
+        int[] arr = new int[Status.values().length];
+
+        if (subTasks.isEmpty()) {
+            setStatus(Status.NEW);
+            return;
+        }
+
+        for (Task task : new ArrayList<Task>(subTasks.values())) {
+            arr[task.getStatus().ordinal()] += 1;
+        }
+
+        if (arr[Status.NEW.ordinal()] == subTasks.size()) {
+            setStatus(Status.NEW);
+        } else if (arr[Status.DONE.ordinal()] == subTasks.size()) {
+            setStatus(Status.DONE);
+        } else {
+            setStatus(Status.IN_PROGRESS);
         }
     }
 
-    public ArrayList<Integer> getSubtasksId() {
-        return subtasksId;
-    }
-
-    public void clearSubtasksId() {
-        subtasksId.clear();
-    }
-
-    public void removeSubtaskById(int id) {
-        subtasksId.remove(Integer.valueOf(id));
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Epic item = (Epic) o;
+        return id == item.id && Objects.equals(name, item.name) && Objects.equals(description, item.description);
     }
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
+    @Override
     public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public Duration getDuration() {
-        return duration;
+    private void calculateStartTime() {
+        LocalDateTime startSubtask = LocalDateTime.now();
+        if (!subTasks.isEmpty()) {
+            for (Subtask subtask : subTasks.values()) {
+                if (subtask.getStartTime().isBefore(startSubtask)) {
+                    startSubtask = subtask.getStartTime();
+                }
+            }
+            this.startTime = startSubtask;
+        }
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    private void calculateEndTime() {
+        LocalDateTime endSubtask = startTime;
+        if (subTasks.isEmpty()) {
+            this.endTime = this.startTime.plusMinutes(duration.toMinutes());
+        } else {
+            for (Subtask subtask : subTasks.values()) {
+                if (subtask.getEndTime().isAfter(endSubtask)) {
+                    endSubtask = subtask.getEndTime();
+                }
+            }
+            this.endTime = endSubtask;
+        }
     }
 
-    @Override
-    public String toString() {
-        long durat = duration.toMinutes();
-        String local = startTime.format(DATE_TIME_FORMATTER);
-        String localend = endTime.format(DATE_TIME_FORMATTER);
-        String line = id + "," + type + "," + name + "," + status + "," + description + "," + duration + "," + local + "," + localend;
-        return line;
+    private void calculateDuration() {
+        if (!subTasks.isEmpty()) {
+            this.duration = Duration.between(this.startTime, this.endTime);
+        }
+    }
+
+    public void calculateTime() {
+        calculateStartTime();
+        calculateEndTime();
+        calculateDuration();
+
     }
 }

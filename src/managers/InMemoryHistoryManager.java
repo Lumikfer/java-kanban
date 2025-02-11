@@ -1,91 +1,90 @@
-package managers;
+package manager;
 
 import task.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final Map<Integer, Node> history = new HashMap<>();
-    private  int historySize = 0;
-    private Node head;
-    private Node tail;
-
-
-
-
+    public Map<Long, Node<Task>> historyTasks = new HashMap<>();
+    private int size = 0;
+    private Node<Task> tail;
+    private Node<Task> head;
 
     @Override
-    public boolean addTask(Task task) {
-        if (task == null) return false;
-        if (history.containsKey(task.getId()))  remove(task.getId());
+    public void add(Task task) {
+        if (historyTasks.containsKey(task.getId())) {
+            remove(task.getId());
+        }
         linkLast(task);
-        return true;
+    }
+
+    @Override
+    public void remove(long id) {
+        removeNode(historyTasks.get(id));
     }
 
     @Override
     public List<Task> getHistory() {
-        List<Task> historyList = new ArrayList<>();
-        Node curNode = head;
-        while (curNode != null) {
-            historyList.add(curNode.task);
-            curNode = curNode.next;
-        }
-        return historyList;
+        return getTasks();
     }
 
-    @Override
-    public boolean remove(int id) {
-        Node nodeToRemove = history.get(id);
-        if (nodeToRemove == null) return false;
-        removeNode(nodeToRemove);
-        history.remove(id);
-        return true;
-    }
-
-    private boolean linkLast(Task task) {
-        if (task == null) return false;
-        if (tail == null) {
-            head = new Node(null, task, null);
-            tail = head;
+    private void linkLast(Task task) {
+        Node<Task> newNode;
+        if (size == 0) {
+            newNode = new Node<>(null, task, null);
+            head = newNode;
+            tail = newNode;
         } else {
-            tail.next = new Node(tail, task, null);
-            tail = tail.next;
+            newNode = new Node<>(tail, task, null);
+            tail.next = newNode;
+            tail = newNode;
         }
-        return true;
+        size++;
+        historyTasks.put(task.getId(), newNode);
     }
 
-    private boolean removeNode(Node node) {
-        if (node == null) return false;
-        if (node == head && head == tail) {
+    public List<Task> getTasks() {
+        List<Task> tasks = new ArrayList<>();
+        for (Map.Entry<Long, Node<Task>> listTask : historyTasks.entrySet()) {
+            tasks.add(listTask.getValue().data);
+        }
+        return tasks;
+    }
+
+    private void removeNode(Node task) {
+        if (size == 0) {
+            return;
+        }
+        if (size == 1) {
             head = null;
             tail = null;
-        } else if (node == head) {
-            head = head.next;
-            head.prev = null;
-        } else if (node == tail) {
-            tail = tail.prev;
-            tail.next = null;
-        } else if (node.prev != null && node.next != null) {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
+            task.data = null;
+            size = 0;
+            return;
+        } else if (task == tail) {
+            task.prev.next = null;
+            task.prev = null;
+            task.data = null;
+        } else if (task == head) {
+            task.next.prev = null;
+            task.next = null;
+            task.data = null;
         } else {
-            return false;
+            task.prev = task.next.next;
+            task.next = task.prev.prev;
+            task.data = null;
         }
-        return true;
+        size--;
     }
 
-    private static class Node {
-        Task task;
-        Node next;
-        Node prev;
+    private static class Node<E extends Task> {
+        E data;
+        Node<E> next;
+        Node<E> prev;
 
-        Node(Node prev, Task task, Node next) {
-            this.task = task;
+        Node(Node<E> prev, E data, Node<E> next) {
+            this.data = data;
             this.next = next;
             this.prev = prev;
         }
     }
-}

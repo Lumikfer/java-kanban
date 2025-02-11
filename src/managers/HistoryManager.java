@@ -1,17 +1,13 @@
-package managers;
+package manager;
 
 import task.Task;
 
 import java.util.List;
 
 public interface HistoryManager {
+    void add(Task task);
 
-    boolean addTask(Task task);
-
+    void remove(long id);
 
     List<Task> getHistory();
-
-
-    boolean remove(int id);
-
 }
