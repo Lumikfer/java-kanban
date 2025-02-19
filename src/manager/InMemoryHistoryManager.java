@@ -88,4 +88,5 @@ public class InMemoryHistoryManager implements HistoryManager {
             this.prev = prev;
         }
     }
+
 }

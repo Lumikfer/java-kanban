@@ -4,16 +4,16 @@ import task.*;
 import util.FormatterUtil;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
-import static util.FormatterUtil.fromString;
 
-public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
-    private final String fileName;
+public class FileBackedTaskManager extends InMemoryTaskManager  {
+    private final File fileName = new File("task.txt");
     private static final String HEAD_CSV = "id,type,name,status,description,epic,duration (minutes),startTime, endTime";
 
-    public FileBackedTaskManager(String fileName) {
-        this.fileName = fileName;
+    public FileBackedTaskManager() {
+
     }
 
     private void save() {
@@ -37,71 +37,56 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    public static void loadFromFile(String file) throws IOException {
-        try (BufferedReader fileReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            while (fileReader.ready()) {
-                String line = fileReader.readLine();
-                if (line.isEmpty()) {
-                    return;
-                }
-                Task taskFromFile = fromString(line, epicTasks);
-                if (taskFromFile == null) {
-                    continue;
-                }
-                if (taskFromFile instanceof Epic epic) {
-                    epicTasks.put(taskFromFile.getId(), epic);
-                } else if (taskFromFile instanceof Subtask subtask) {
-                    epicTasks.get(subtask.getEpicTask().getId()).addSubTask(subtask);
+    public static FileBackedTaskManager loadFromFile(File file) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            FileBackedTaskManager manager = new FileBackedTaskManager();
+            List<String> list = new ArrayList<>();
+            String head = "id,type,name,status,description,epic,duration (minutes),startTime, endTime";
+            while (br.ready()) {
+                list.add(br.readLine());
+            }
+
+            list.remove(head);
+            for (String str : list) {
+                String[] s = str.split(",");
+                String task = TaskType.TASK.toString();
+                String subtask = TaskType.SUBTASK.toString();
+                String epic = TaskType.EPIC.toString();
+                if (s[1].equals(task)) {
+                    manager.createTask(FormatterUtil.fromStringTask(str));
+                } else if (s[1].equals(epic)) {
+                    manager.createEpicTask(FormatterUtil.fromStringEpic(str));
+                } else if (s[1].equals(subtask)) {
+                    manager.createSubTask(FormatterUtil.fromStringSub(str));
                 } else {
-                    tasks.put(taskFromFile.getId(), taskFromFile);
+                    System.out.println("Eror");
                 }
             }
+            return manager;
         } catch (IOException e) {
-            System.out.println("Произошла ошибка во время чтения файла.");
+           System.out.println("Возникла ошибка  загрузки данных из файла");
         }
+        return null;
     }
 
     @Override
-    public Task createTask(String name, String description, long duration, String startTime) {
-        Task task = super.createTask(name, description, duration, startTime);
+    public void createTask(Task task) {
         save();
-        return task;
     }
 
     @Override
-    public Epic createEpicTask(String name, String description, long duration, String startTime) {
-        Epic task = super.createEpicTask(name, description, duration, startTime);
+    public void createSubTask(Subtask subtask) {
         save();
-        return task;
     }
 
     @Override
-    public Subtask createSubTask(Epic task, String name, String description, long duration, String startTime) {
-        Subtask subTask = super.createSubTask(task, name, description, duration, startTime);
+    public void createEpicTask(Epic epic) {
         save();
-        return subTask;
     }
 
-    @Override
-    public Task updateTask(Task task, String name, String description, long duration, String startTime) {
-        Task updatingTask = super.updateTask(task, name, description, duration, startTime);
-        save();
-        return updatingTask;
-    }
 
-    @Override
-    public Epic updateEpicTask(Epic task, String name, String description, long duration, String startTime) {
-        Epic updatingTask = super.updateEpicTask(task, name, description, duration, startTime);
-        save();
-        return updatingTask;
-    }
 
-    @Override
-    public Subtask updateSubTask(Subtask task, String name, String description, long duration, String startTime) {
-        Subtask updatingTask = super.updateSubTask(task, name, description, duration, startTime);
-        save();
-        return updatingTask;
-    }
+
 
     @Override
     public Task deleteTaskById(Long id) {
@@ -117,10 +102,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public Subtask deleteSubTaskById(Long id) {
-        Subtask sb = super.deleteSubTaskById(id);
+    public void deleteSubTaskById(Long id) {
+         super.deleteSubTaskById(id);
         save();
-        return sb;
+
     }
 
     @Override
@@ -138,10 +123,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public Subtask deleteSubTask(Subtask task) {
-        Subtask subtask = super.deleteSubTask(task);
+    public void deleteSubTask(Subtask task) {
+       super.deleteSubTask(task);
         save();
-        return subtask;
+
     }
 
     @Override

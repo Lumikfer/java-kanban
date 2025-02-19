@@ -7,9 +7,9 @@ import java.util.Objects;
 
 public class Task {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
-    protected final long id;
-    protected final String name;
-    protected final String description;
+    protected long id;
+    protected String name;
+    protected String description;
     protected Status status;
     protected TaskType taskType;
     protected Duration duration;
@@ -23,6 +23,25 @@ public class Task {
         this.taskType = TaskType.TASK;
         this.startTime = LocalDateTime.parse(startTime, DATE_TIME_FORMATTER);
         this.duration = Duration.ofMinutes(duration);
+    }
+
+    public Task(String name, String description, Status status) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+    }
+
+    public Task(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.status = Status.NEW;
+    }
+
+    public Task(String name, String description, Status status, int id) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+        this.status = status;
     }
 
     public String getName() {
