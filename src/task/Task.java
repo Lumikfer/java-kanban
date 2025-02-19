@@ -1,15 +1,29 @@
 package task;
 
-import status.Status;
-
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
+    protected long id;
     protected String name;
     protected String description;
-    protected int id;
     protected Status status;
-    protected TaskEnum type = TaskEnum.TASK;
+    protected TaskType taskType;
+    protected Duration duration;
+    protected LocalDateTime startTime;
+
+    public Task(long id, String name, String description, long duration, String startTime) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = Status.NEW;
+        this.taskType = TaskType.TASK;
+        this.startTime = LocalDateTime.parse(startTime, DATE_TIME_FORMATTER);
+        this.duration = Duration.ofMinutes(duration);
+    }
 
     public Task(String name, String description, Status status) {
         this.name = name;
@@ -30,54 +44,59 @@ public class Task {
         this.status = status;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public Status getStatus() {
+        return status;
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setDuration(Duration duration) {
+        if (!duration.isNegative()) {
+            this.duration = duration;
+        }
+    }
+
+    public LocalDateTime getEndTime() {
+        return this.startTime.plusMinutes(duration.toMinutes());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task item = (Task) o;
+        return id == item.id && Objects.equals(name, item.name) && Objects.equals(description, item.description);
     }
 
     @Override
     public String toString() {
-        String line = "" + id + "," + type + "," + name + "," + status + "," + description;
-        return line;
+        return getTaskType() + "@Id#" + id + ":" + "\n\tname: " + name + "\n\tdescription: " + description + "\n\tstatus: " + getStatus() + "\n\tStartTask: " + startTime.format(DATE_TIME_FORMATTER) + "\n\tEndTask: " + getEndTime().format(DATE_TIME_FORMATTER);
     }
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        Task task = (Task) object;
-        return id == task.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

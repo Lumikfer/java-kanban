@@ -1,16 +1,20 @@
 package task;
 
-import status.Status;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Integer> subtasksId = new ArrayList<>();
-    protected TaskEnum type = TaskEnum.EPIC;
+    private LocalDateTime endTime;
+
+    public Epic(long id, String name, String description, long duration, String startTime) {
+        super(id, name, description, duration, startTime);
+        this.taskType = TaskType.EPIC;
+    }
 
     public Epic(String name, String description, Status status, int id) {
         super(name, description, Status.NEW);
-
     }
 
     public Epic(String name, String description, int id) {
@@ -20,6 +24,7 @@ public class Epic extends Task {
     public Epic(String name, String description) {
         super(name, description, Status.NEW);
     }
+
 
     public void addSubtask(int subtaskId) {
         if (subtaskId != this.getId()) {
@@ -36,13 +41,25 @@ public class Epic extends Task {
     }
 
     @Override
-    public String toString() {
-        String line = "" + id + "," + type + "," + name + "," + status + "," + description;
-        return line;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Epic item = (Epic) o;
+        return id == item.id && Objects.equals(name, item.name) && Objects.equals(description, item.description);
     }
 
-    public void removeSubtaskById(int id) {
-        subtasksId.remove(Integer.valueOf(id));
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void removeSubtaskById(Long id) {
+        subtasksId.remove(Long.valueOf(id));
+    }
+
 
 }
