@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
-   private ArrayList<Integer>  subtasksId  = new ArrayList<>();
+    private ArrayList<Integer> subtasksId = new ArrayList<>();
     private LocalDateTime endTime;
 
     public Epic(long id, String name, String description, long duration, String startTime) {
         super(id, name, description, duration, startTime);
         this.taskType = TaskType.EPIC;
     }
-    
+
     public Epic(String name, String description, Status status, int id) {
         super(name, description, Status.NEW);
     }
@@ -24,7 +24,6 @@ public class Epic extends Task {
     public Epic(String name, String description) {
         super(name, description, Status.NEW);
     }
-
 
 
     public void addSubtask(int subtaskId) {
