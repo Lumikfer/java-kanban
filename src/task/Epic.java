@@ -1,10 +1,7 @@
 package task;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
@@ -17,7 +14,6 @@ public class Epic extends Task {
     }
     public Epic(String name, String description, Status status, int id) {
         super(name, description, Status.NEW);
-
     }
 
     public Epic(String name, String description, int id) {
