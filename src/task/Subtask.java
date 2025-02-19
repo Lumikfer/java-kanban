@@ -25,7 +25,7 @@ public class Subtask extends Task {
         this.epicId = epicId;
         this.status = Status.NEW;
     }
-    
+
     public int getEpicId() {
         return epicId;
     }
