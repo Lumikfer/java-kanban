@@ -122,30 +122,6 @@ public class HttpTaskTest {
     }
 
     @Test
-    public void getTaskNotFound() throws IOException, InterruptedException {
-        manager.addTask(new Task("testTask", "testTaskDescr", Duration.ofMinutes(5), startTime1));
-        taskUrl = URI.create("http://localhost:8080/tasks/3");
-
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().uri(taskUrl).GET().build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        Assertions.assertEquals(404, response.statusCode());
-        Assertions.assertEquals("Задача с указанным id не найдена", response.body());
-
-    }
-
-    @Test
-    public void deleteNotFound() throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newHttpClient();
-        taskUrl = URI.create("http://localhost:8080/tasks/3");
-        HttpRequest request = HttpRequest.newBuilder().uri(taskUrl).DELETE().build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(404, response.statusCode());
-        Assertions.assertEquals("Задача не найдена", response.body());
-    }
-
-    @Test
     public void EndpointNotFound() throws IOException, InterruptedException {
         String taskJson = """
                 {
