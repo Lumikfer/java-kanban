@@ -44,11 +44,11 @@ public class HttpTaskServer {
 
     public static void main(String[] args) throws IOException {
         TaskManager manager = Managers.getDefault();
-        manager.addTask(new Task("Выгулять собаку", "Погулять с Джеком 20 минут", Duration.ofMinutes(100), LocalDateTime.now()));
-        manager.addTask(new Task("Выгулять собаку2", "Погулять с Джеком 20 минут2", Duration.ofMinutes(100), LocalDateTime.of(2025, 6, 2, 10, 10)));
-        manager.addEpic(new Epic("Выгулять собаку5", "Погулять с Джеком 20 минут5"));
-        manager.addSubtask(new Subtask("Выгулять собаку6", "Погулять с Джеком 20 минут6", 3, Duration.ofMinutes(100), LocalDateTime.of(2025, 6, 2, 10, 0)));
-        manager.addSubtask(new Subtask("Выгулять собаку7", "Погулять с Джеком 20 минут7", 3, Duration.ofMinutes(100), LocalDateTime.of(2025, 7, 2, 10, 0)));
+        manager.addTask(new Task("dasdasdasd", "asdasdasd", Duration.ofMinutes(100), LocalDateTime.now()));
+        manager.addTask(new Task("dasdasdasd11", "dasdasdasd11", Duration.ofMinutes(100), LocalDateTime.of(2025, 6, 2, 10, 10)));
+        manager.addEpic(new Epic("dasdasdasd22", "dasdasdasd22"));
+        manager.addSubtask(new Subtask("dasdasdasd33", "dasdasdasd33", 3, Duration.ofMinutes(100), LocalDateTime.of(2025, 6, 2, 10, 0)));
+        manager.addSubtask(new Subtask("dasdasdasd212", "dasdasdasd212", 3, Duration.ofMinutes(100), LocalDateTime.of(2025, 7, 2, 10, 0)));
         HttpTaskServer server = new HttpTaskServer(manager);
         server.start();
     }
