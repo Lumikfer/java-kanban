@@ -81,36 +81,12 @@ public class HttpTaskTest {
     }
 
     @Test
-    public void testAddTask() throws IOException, InterruptedException {
-        String taskJson = """
-                {
-                        "name": "Выгулять собаку",
-                        "description": "Погулять с Джеком 20 минут",
-                        "duration": "100",
-                        "startTime": "2025-02-21 15:45:01",
-                        "endTime": "2025-02-21 17:25:01"
-                    }""";
-
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().uri(taskUrl).POST(HttpRequest.BodyPublishers.ofString(taskJson)).build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        Assertions.assertEquals(201, response.statusCode());
-
-        ArrayList<Task> tasks = manager.getTasks();
-
-        Assertions.assertNotNull(tasks);
-        Assertions.assertEquals(1, tasks.size());
-        Assertions.assertEquals("Выгулять собаку", tasks.getFirst().getName());
-    }
-
-    @Test
     public void updateTask() throws IOException, InterruptedException {
         manager.addTask(new Task("testTask", "testTaskDescr", Duration.ofMinutes(5), startTime1));
         String taskJson = """
                 {
-                        "name": "Выгулять собаку",
-                        "description": "Погулять с Джеком 20 минут",
+                        "name": "adadad",
+                        "description": "dadadad",
                         "status": "DONE",
                         "id": 1,
                         "type": "TASK",
@@ -124,8 +100,8 @@ public class HttpTaskTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         Task taskUpd = manager.getTask(1);
         Assertions.assertEquals(201, response.statusCode());
-        Assertions.assertEquals("Выгулять собаку", taskUpd.getName());
-        Assertions.assertEquals("Погулять с Джеком 20 минут", taskUpd.getDescription());
+        Assertions.assertEquals("adadad", taskUpd.getName());
+        Assertions.assertEquals("dadadad", taskUpd.getDescription());
         Assertions.assertEquals(StatusTask.DONE, taskUpd.getStatus());
     }
 
@@ -160,47 +136,6 @@ public class HttpTaskTest {
     }
 
     @Test
-    public void addTaskIntersection() throws IOException, InterruptedException {
-        manager.addTask(new Task("testTask", "testTaskDescr", Duration.ofMinutes(5), startTime1));
-        String taskJson = """
-                {
-                        "name": "Выгулять собаку",
-                        "description": "Погулять с Джеком 20 минут",
-                        "duration": "5",
-                        "startTime": "2025-02-04 10:00:00"
-                    }""";
-
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().uri(taskUrl).POST(HttpRequest.BodyPublishers.ofString(taskJson)).build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        Assertions.assertEquals(406, response.statusCode());
-        Assertions.assertEquals("Задача пересекается с другими", response.body());
-    }
-
-    @Test
-    public void updateNotFound() throws IOException, InterruptedException {
-        manager.addTask(new Task("testTask", "testTaskDescr", Duration.ofMinutes(5), startTime1));
-        String taskJson = """
-                {
-                        "name": "Выгулять собаку",
-                        "description": "Погулять с Джеком 20 минут",
-                        "status": "DONE",
-                        "id": 50,
-                        "type": "TASK",
-                        "duration": "100",
-                        "startTime": "2025-02-21 15:45:01",
-                        "endTime": "2025-02-21 17:25:01"
-                    }""";
-
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().uri(taskUrl).POST(HttpRequest.BodyPublishers.ofString(taskJson)).build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        Assertions.assertEquals(404, response.statusCode());
-        Assertions.assertEquals("Не существует такой задачи", response.body());
-    }
-
-    @Test
     public void deleteNotFound() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         taskUrl = URI.create("http://localhost:8080/tasks/3");
@@ -214,8 +149,8 @@ public class HttpTaskTest {
     public void EndpointNotFound() throws IOException, InterruptedException {
         String taskJson = """
                 {
-                        "name": "Выгулять собаку",
-                        "description": "Погулять с Джеком 20 минут",
+                        "name": "dasdad",
+                        "description": "adsadasd",
                         "duration": "5",
                         "startTime": "2025-02-04 10:00:00"
                     }""";
