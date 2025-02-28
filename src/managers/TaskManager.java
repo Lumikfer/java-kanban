@@ -25,11 +25,11 @@ public interface TaskManager {
 
     TreeSet<Task> getPrioritizedTasks();
 
-    void addTask(Task task);
+    int addTask(Task task);
 
-    void addSubtask(Subtask subtask);
+    int addSubtask(Subtask subtask);
 
-    void addEpic(Epic epic);
+    int addEpic(Epic epic);
 
     void deleteTask(int id);
 

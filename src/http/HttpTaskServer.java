@@ -22,9 +22,9 @@ public class HttpTaskServer {
 
         httpServer.createContext("/tasks", new TasksHandler(taskManager));
 
-        httpServer.createContext("/epics", new EpicsHandler(taskManager));
+        httpServer.createContext("/epics", new EpicHandler(taskManager));
 
-        httpServer.createContext("/subtasks", new SubtasksHandler(taskManager));
+        httpServer.createContext("/subtasks", new SubTaskHandler(taskManager));
 
         httpServer.createContext("/history", new HistoryHandler(taskManager));
 
@@ -32,7 +32,7 @@ public class HttpTaskServer {
     }
 
     public static void main(String[] args) {
-        TaskManager taskManager = getDefault();
+        TaskManager taskManager = Mangers.getDefault();
         HttpTaskServer httpServer = new HttpTaskServer(taskManager);
         httpServer.start();
     }
