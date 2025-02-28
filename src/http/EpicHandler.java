@@ -11,7 +11,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
     public TaskManager taskManager;
 
-    public EpicsHandler(TaskManager taskManager) {
+    public EpicHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
 

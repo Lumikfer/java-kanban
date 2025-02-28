@@ -14,7 +14,7 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     public TaskManager taskManager;
 
-    public SubtasksHandler(TaskManager taskManager) {
+    public SubTaksHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
 
