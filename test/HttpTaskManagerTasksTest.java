@@ -1,4 +1,4 @@
-package solid;
+package test;
 
 import api.*;
 import com.google.gson.Gson;
@@ -99,7 +99,7 @@ class HttpTaskManagerTasksTest {
     @Test
     void testDeleteTask() throws IOException, InterruptedException {
         // Добавляем задачу для удаления
-        Task task = new Task("Test Task", "Testing task deletion", TaskStatus.NEW,
+        Task task = new Task("Test Task", "Tasks", TaskStatus.NEW,
                 Duration.ofMinutes(30), LocalDateTime.now());
         manager.addTask(task);
 
@@ -125,7 +125,7 @@ class HttpTaskManagerTasksTest {
     @Test
     void testGetTaskById() throws IOException, InterruptedException {
         // Добавляем задачу для получения
-        Task task = new Task("Test Task", "Testing task retrieval", TaskStatus.NEW,
+        Task task = new Task("Test Task", "Test", TaskStatus.NEW,
                 Duration.ofMinutes(30), LocalDateTime.now());
         manager.addTask(task);
 
