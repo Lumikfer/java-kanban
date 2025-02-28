@@ -1,6 +1,5 @@
 package http;
 
-import com.google.gson.JsonParser;
 public enum Endpoint {
     GET_TASKS,
     GET_TASK_BY_ID,
