@@ -88,13 +88,13 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
             taskManager.updateEpic(newEpic);
             sendText(exchange, "Задача с ID=" + newEpic.getId() + " обновлена", 201);
         } else {
-                sendText(exchange, "Задача добавлена с ID: " + taskId, 201);
+                sendText(exchange, "Задача добавлена ", 201);
         }
     }
 
     private void handleGetTaskById(HttpExchange exchange) throws IOException {
         String[] requestURI = exchange.getRequestURI().getPath().split("/");
-        String response = gson.toJson(taskManager.getEpic(Integer.parseInt(requestURI[2])));
+        String response = gson.toJson(taskManager.getEpic(requestURI[2]));
         if (response.equals("null")) {
             sendNotFound(exchange, "Такой задачи нет");
         } else {

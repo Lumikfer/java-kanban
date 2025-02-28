@@ -80,14 +80,9 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
             taskManager.updateTask(newTask);
             sendText(exchange, "Задача с ID=" + newTask.getId() + " обновлена", 201);
         } else {
-            int taskId = taskManager.addTask(newTask);
-            if (taskId > 0) {
-                sendText(exchange, "Задача добавлена с ID: " + taskId, 201);
-            } else {
-                sendHasInteractions(exchange);
+                sendText(exchange, "Задача добавлена ", 201);
             }
         }
-    }
 
     private void handleGetTaskById(HttpExchange exchange) throws IOException {
         String[] requestURI = exchange.getRequestURI().getPath().split("/");

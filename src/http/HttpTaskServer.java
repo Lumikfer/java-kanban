@@ -32,7 +32,7 @@ public class HttpTaskServer {
     }
 
     public static void main(String[] args) {
-        TaskManager taskManager = Mangers.getDefault();
+        TaskManager taskManager = getDefault();
         HttpTaskServer httpServer = new HttpTaskServer(taskManager);
         httpServer.start();
     }
