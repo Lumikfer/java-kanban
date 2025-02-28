@@ -83,14 +83,9 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
             taskManager.updateSubtask(newTask);
             sendText(exchange, "Задача с ID=" + newTask.getId() + " обновлена", 201);
         } else {
-            int taskId = taskManager.addSubtask(newTask);
-            if (taskId > 0) {
                 sendText(exchange, "Задача добавлена с ID: " + taskId, 201);
-            } else {
-                sendHasInteractions(exchange);
             }
         }
-    }
 
     private void handleGetTaskById(HttpExchange exchange) throws IOException {
         String[] requestURI = exchange.getRequestURI().getPath().split("/");

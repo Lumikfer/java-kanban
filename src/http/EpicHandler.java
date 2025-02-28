@@ -88,12 +88,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
             taskManager.updateEpic(newEpic);
             sendText(exchange, "Задача с ID=" + newEpic.getId() + " обновлена", 201);
         } else {
-            int taskId = taskManager.addEpic(newEpic);
-            if (taskId > 0) {
                 sendText(exchange, "Задача добавлена с ID: " + taskId, 201);
-            } else {
-                sendHasInteractions(exchange);
-            }
         }
     }
 
