@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
+public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
 
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     public TaskManager taskManager;
