@@ -1,49 +1,45 @@
 package http;
 
+import http.handlers.*;
 import com.sun.net.httpserver.HttpServer;
-import managers.*;
-import tasks.*;
+import manager.*;
+
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import com.sun.net.httpserver.HttpServer;
 
 public class HttpTaskServer {
-
     private static final int PORT = 8080;
+    private final HttpServer server;
+    public static String[] args;
 
-    private final HttpServer httpServer;
-
-    public HttpTaskServer(TaskManager taskManager) {
-        try {
-            httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        httpServer.createContext("/tasks", new TasksHandler(taskManager));
-
-        httpServer.createContext("/epics", new EpicHandler(taskManager));
-
-        httpServer.createContext("/subtasks", new SubTaskHandler(taskManager));
-
-        httpServer.createContext("/history", new HistoryHandler(taskManager));
-
-        httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
+    // Конструктор с возможностью передачи TaskManager
+    public HttpTaskServer(TaskManager taskManager) throws IOException {
+        this.server = HttpServer.create(new InetSocketAddress(PORT), 0);
+        server.createContext("/tasks", new http.handlers.TasksHandler(taskManager));
+        server.createContext("/subtasks", new http.handlers.SubtasksHandler(taskManager));
+        server.createContext("/epics", new EpicsHandler(taskManager));
+        server.createContext("/history", new HistoryHandler(taskManager));
+        server.createContext("/prioritized", new http.handlers.PrioritizedHandler(taskManager));
     }
 
-    public static void main(String[] args) {
-        TaskManager taskManager = getDefault();
-        HttpTaskServer httpServer = new HttpTaskServer(taskManager);
-        httpServer.start();
-    }
-
+    // Метод для запуска сервера
     public void start() {
-        httpServer.start();
-        System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
+        server.start();
+        System.out.println("HTTP-сервер запущен на порту " + PORT);
     }
 
+    // Метод для остановки сервера
     public void stop() {
-        httpServer.stop(0);
+        server.stop(0);
         System.out.println("HTTP-сервер остановлен.");
+    }
+
+    // Метод main для запуска сервера с дефолтным менеджером
+    public static void main(String[] args) throws IOException {
+        HttpTaskServer.args = args;
+        TaskManager taskManager = Managers.getDefault(); // Используем дефолтный менеджер
+        HttpTaskServer httpTaskServer = new HttpTaskServer(taskManager);
+        httpTaskServer.start();
     }
 }

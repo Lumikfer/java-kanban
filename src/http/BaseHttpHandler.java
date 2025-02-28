@@ -1,39 +1,46 @@
 package http;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
-import tasks.*;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class BaseHttpHandler {
+    protected static final Gson GSON = http.GsonFactory.getGson();
 
-    protected static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-
-    protected Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Duration.class, new AdapterForDuration())
-            .registerTypeAdapter(LocalDateTime.class, new AdapterForLocalDateTime())
-            .registerTypeAdapter(TaskType.class, new AdapterForTaskType())
-            .create();
-
-    protected void sendText(HttpExchange exchange, String responseText, int responseCode) throws IOException {
-        byte[] responseBytes = responseText.getBytes(DEFAULT_CHARSET);
+    protected void sendText(HttpExchange exchange, String text, int statusCode) throws IOException {
+        byte[] response = text.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        exchange.sendResponseHeaders(responseCode, responseBytes.length);
-        exchange.getResponseBody().write(responseBytes);
-        exchange.close();
+        exchange.sendResponseHeaders(statusCode, response.length);
+        try (OutputStream os = exchange.getResponseBody()) {
+            os.write(response);
+        }
     }
 
-    protected void sendNotFound(HttpExchange exchange, String message) throws IOException {
-        sendText(exchange, message, 404);
+    protected void sendNotFound(HttpExchange exchange) throws IOException {
+        String response = "Задача не найдена.";
+        sendText(exchange, response, 404);
     }
 
     protected void sendHasInteractions(HttpExchange exchange) throws IOException {
-        sendText(exchange, "Новая задача пересекается с существующей", 406);
+        String response = "Задача пересекается по времени с другой задачей.";
+        sendText(exchange, response, 406);
+    }
+
+    protected void sendInternalError(HttpExchange exchange) throws IOException {
+        String response = "Произошла внутренняя ошибка сервера.";
+        sendText(exchange, response, 500);
+    }
+
+    protected <T> T readRequestBody(HttpExchange exchange, Class<T> clazz) throws IOException {
+        try (InputStream is = exchange.getRequestBody()) {
+            String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            return GSON.fromJson(body, clazz);
+        } catch (Exception e) {
+            throw new IOException("Ошибка при чтении тела запроса", e);
+        }
     }
 }
