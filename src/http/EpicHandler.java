@@ -7,7 +7,7 @@ import tasks.Epic;
 
 import java.io.IOException;
 
-public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
+public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
     public TaskManager taskManager;
 
