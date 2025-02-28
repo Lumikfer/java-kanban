@@ -94,7 +94,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
     private void handleGetTaskById(HttpExchange exchange) throws IOException {
         String[] requestURI = exchange.getRequestURI().getPath().split("/");
-        String response = gson.toJson(taskManager.getEpic(requestURI[2]));
+        String response = gson.toJson(taskManager.getEpicById(Integer.parseInt(requestURI[2])));
         if (response.equals("null")) {
             sendNotFound(exchange, "Такой задачи нет");
         } else {
