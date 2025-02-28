@@ -1,6 +1,6 @@
 package test;
 
-import api.*;
+import http.*;
 import com.google.gson.Gson;
 import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.*;
@@ -25,15 +25,15 @@ class HttpTaskManagerTasksTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        manager = new InMemoryTaskManager(); // Используем InMemoryTaskManager для тестов
-        taskServer = new HttpTaskServer(manager); // Передаём менеджер в сервер
-        taskServer.start(); // Запускаем сервер
-        gson = GsonFactory.getGson(); // Инициализируем Gson для работы с JSON
+        manager = new InMemoryTaskManager();
+        taskServer = new HttpTaskServer(manager);
+        taskServer.start();
+        gson = GsonFactory.getGson();
     }
 
     @AfterEach
     void tearDown() {
-        taskServer.stop(); // Останавливаем сервер после каждого теста
+        taskServer.stop();
     }
 
     @Test
@@ -41,7 +41,7 @@ class HttpTaskManagerTasksTest {
         Task task = new Task("Test Task", "Testing task addition", TaskStatus.NEW,
                 Duration.ofMinutes(30), LocalDateTime.now());
 
-        String taskJson = gson.toJson(task); // Сериализуем задачу в JSON
+        String taskJson = gson.toJson(task);
 
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks");
@@ -54,7 +54,7 @@ class HttpTaskManagerTasksTest {
 
         assertEquals(201, response.statusCode(), "Неверный код ответа при добавлении задачи");
 
-        Task addedTask = gson.fromJson(response.body(), Task.class); // Десериализуем ответ
+        Task addedTask = gson.fromJson(response.body(), Task.class);
         assertNotNull(addedTask, "Задача не возвращается");
 
         List<Task> tasksFromManager = manager.getTasks();
@@ -65,17 +65,14 @@ class HttpTaskManagerTasksTest {
 
     @Test
     void testUpdateTask() throws IOException, InterruptedException {
-        // Добавляем задачу для обновления
         Task task = new Task("Test Task", "Testing task update", TaskStatus.NEW,
                 Duration.ofMinutes(30), LocalDateTime.now());
         manager.addTask(task);
 
-        // Обновляем задачу
         task.setName("Updated Task");
         task.setStatus(TaskStatus.IN_PROGRESS);
         String updatedTaskJson = gson.toJson(task);
 
-        // Создаём HTTP-клиент и запрос
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks");
         HttpRequest request = HttpRequest.newBuilder()
@@ -83,7 +80,6 @@ class HttpTaskManagerTasksTest {
                 .POST(HttpRequest.BodyPublishers.ofString(updatedTaskJson))
                 .build();
 
-        // Отправляем запрос и получаем ответ
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         // Проверяем код ответа
