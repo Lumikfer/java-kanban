@@ -23,19 +23,19 @@ public class EpicHttpHendler extends BaseHttpHandler implements HttpHandler {
 
         switch (endpoint) {
             case GET_TASKS:
-                GetEpics(exchange);
+                getEpics(exchange);
                 break;
             case GET_TASK_ID:
-                GetEpicId(exchange);
+                getEpicId(exchange);
                 break;
             case POST_TASK:
-                PostEpic(exchange);
+                postEpic(exchange);
                 break;
             case DELETE_TASK:
-                DelEpic(exchange);
+                delEpic(exchange);
                 break;
             case GET_SUBTASKS_BY_EPIC:
-                GetSubByEpic(exchange);
+                getSubByEpic(exchange);
                 break;
             default:
                 sendNotFound(exchange, "поинта не сущетсвует");

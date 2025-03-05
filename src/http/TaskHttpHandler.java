@@ -22,16 +22,16 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
 
         switch (endpoint) {
             case GET_TASKS:
-                GetTask(exchange);
+                getTask(exchange);
                 break;
             case GET_TASK_ID:
-                GetTaskId(exchange);
+                getTaskId(exchange);
                 break;
             case POST_TASK:
-                PostTask(exchange);
+                postTask(exchange);
                 break;
             case DELETE_TASK:
-                DelTask(exchange);
+                delTask(exchange);
                 break;
             default:
                 sendNotFound(exchange, "поинта не сущетсвует");
@@ -59,7 +59,7 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
         return EndPoints.UNKNOWN;
     }
 
-    private void DelTask(HttpExchange exchange) throws IOException {
+    private void delTask(HttpExchange exchange) throws IOException {
         String[] e = exchange.getRequestURI().getPath().split("/");
         if (taskManager.getTask(Integer.parseInt(e[2])) != null) {
             taskManager.deleteTask(Integer.parseInt(e[2]));
@@ -70,7 +70,7 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
 
     }
 
-    private void GetTask(HttpExchange exchange) throws IOException {
+    private void getTask(HttpExchange exchange) throws IOException {
 
         String res = gson.toJson(taskManager.getTasks());
         if (res.isEmpty()) {
@@ -81,7 +81,7 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
 
     }
 
-    private void GetTaskId(HttpExchange exchange) throws IOException {
+    private void getTaskId(HttpExchange exchange) throws IOException {
         String[] e = exchange.getRequestURI().getPath().split("/");
         String res = gson.toJson(taskManager.getTask(Integer.parseInt(e[2])));
         if (res.isEmpty()) {
@@ -91,7 +91,7 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
         }
     }
 
-    private void PostTask(HttpExchange exchange) throws IOException {
+    private void postTask(HttpExchange exchange) throws IOException {
 
         String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
 

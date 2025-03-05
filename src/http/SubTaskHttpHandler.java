@@ -22,16 +22,16 @@ public class SubTaskHttpHandler extends BaseHttpHandler implements HttpHandler {
 
         switch (endpoint) {
             case GET_TASKS:
-                GetSubTask(exchange);
+                getSubTask(exchange);
                 break;
             case GET_TASK_ID:
-                GetSubTaskId(exchange);
+                getSubTaskId(exchange);
                 break;
             case POST_TASK:
-                PostSubTask(exchange);
+                postSubTask(exchange);
                 break;
             case DELETE_TASK:
-                DelSubTask(exchange);
+                delSubTask(exchange);
                 break;
             default:
                 sendNotFound(exchange, "поинта не сущетсвует");
