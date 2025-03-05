@@ -2,6 +2,7 @@ package test;
 
 import manager.*;
 import tasks.*;
+import statuses.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,7 @@ public class FileBackedTaskManagerTest {
 
     protected FileBackedTaskManager createTaskManager() {
         try {
-            file = Files.createTempFile("tasks", ".csv").toFile();
+            file = Files.createTempFile("tasks", ".txt").toFile();
         } catch (IOException e) {
             throw new RuntimeException("Ошибка создания временного файла", e);
         }
@@ -30,7 +31,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void testSaveAndLoad() {
-        Task task = new Task("Task 1", "Description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task = new Task("Task 1", "Description", StatusTask.NEW,1,Duration.ofMinutes(30), LocalDateTime.now());
         manager.addTask(task);
         FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(file);
         assertEquals(task, loadedManager.getTaskByID(task.getId()));

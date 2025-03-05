@@ -17,7 +17,7 @@ public class InMemoryHistoryManagerTest {
     @Test
     public void testAddToHistory() {
         HistoryManager historyManager = new InMemoryHistoryManager();
-        Task task = new Task("Task 1", "Description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task = new Task("Task 1", "Description", StatusTask.NEW,1,Duration.ofMinutes(30), LocalDateTime.now());
         historyManager.add(task);
         assertEquals(List.of(task), historyManager.getHistory());
     }
@@ -25,8 +25,8 @@ public class InMemoryHistoryManagerTest {
     @Test
     public void testRemoveFromHistory() {
         TaskManager manager = new InMemoryTaskManager();
-        Task task1 = new Task("Task 1", "Description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now());
-        Task task2 = new Task("Task 2", "Description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now().plusHours(1));
+        Task task = new Task("Task 1", "Description", StatusTask.NEW,1,Duration.ofMinutes(30), LocalDateTime.now());
+        Task task1 = new Task("Task 12", "Description", StatusTask.NEW,2,Duration.ofMinutes(30), LocalDateTime.now());
         manager.addTask(task1);
         manager.addTask(task2);
         manager.getTaskByID(task1.getId());
@@ -44,7 +44,7 @@ public class InMemoryHistoryManagerTest {
     @Test
     public void testDuplicateHistory() {
         HistoryManager historyManager = new InMemoryHistoryManager();
-        Task task = new Task("Task 1", "Description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task = new Task("Task 1", "Description", StatusTask.NEW,1,Duration.ofMinutes(30), LocalDateTime.now());
         historyManager.add(task);
         historyManager.add(task);
         assertEquals(1, historyManager.getHistory().size());

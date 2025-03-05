@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class HistoryManagerTest {
@@ -21,7 +23,7 @@ public class HistoryManagerTest {
     @Test
     void add() {
         HistoryManager historyManager = Managers.getDefaultHistory();
-        Task task = new Task("Task1", "description", TaskStatus.NEW);
+        Task task = new Task("Task 1", "Description", StatusTask.NEW,1,Duration.ofMinutes(30), LocalDateTime.now());
         historyManager.add(task);
         final List<Task> history = historyManager.getHistory();
         assertNotNull(history, "История не пустая.");
@@ -31,7 +33,7 @@ public class HistoryManagerTest {
     @Test
     void remove() {
         HistoryManager historyManager = Managers.getDefaultHistory();
-        Task task = new Task("Task1", "description", TaskStatus.NEW);
+        Task task = new Task("Task 1", "Description", StatusTask.NEW,1,Duration.ofMinutes(30), LocalDateTime.now());
         historyManager.remove(task.getId());
         final List<Task> history = historyManager.getHistory();
         assertEquals(0, history.size(), "История пустая.");
