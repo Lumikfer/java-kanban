@@ -112,13 +112,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 String[] taskInfo = task.split(",");
                 switch (TaskType.valueOf(taskInfo[1])) {
                     case TaskType.TASK:
-                        manager.addTask(StringFormatter.TaskfromString(task));
+                        manager.addTask(StringFormatter.taskfromString(task));
                         break;
                     case TaskType.SUBTASK:
-                        manager.addSubtask(StringFormatter.SubfromString(task));
+                        manager.addSubtask(StringFormatter.subfromString(task));
                         break;
                     case TaskType.EPIC:
-                        manager.addEpic(StringFormatter.EpicfromString(task));
+                        manager.addEpic(StringFormatter.epicfromString(task));
                         break;
                     default:
                         System.out.println("Не определена задача в файле");
