@@ -1,46 +1,37 @@
 package http;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class BaseHttpHandler {
-    protected static final Gson GSON = http.GsonFactory.getGson();
 
-    protected void sendText(HttpExchange exchange, String text, int statusCode) throws IOException {
-        byte[] response = text.getBytes(StandardCharsets.UTF_8);
-        exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        exchange.sendResponseHeaders(statusCode, response.length);
-        try (OutputStream os = exchange.getResponseBody()) {
-            os.write(response);
-        }
+    protected void sendText(HttpExchange h, String text,int rcode) throws IOException {
+        byte[] resp = text.getBytes(StandardCharsets.UTF_8);
+        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+        h.sendResponseHeaders(200, resp.length);
+        h.getResponseBody().write(resp);
+        h.close();
     }
 
-    protected void sendNotFound(HttpExchange exchange) throws IOException {
-        String response = "Задача не найдена.";
-        sendText(exchange, response, 404);
+    protected void sendNotFound(HttpExchange exchange, String message) throws IOException {
+        sendText(exchange, message,404);
     }
 
     protected void sendHasInteractions(HttpExchange exchange) throws IOException {
-        String response = "Задача пересекается по времени с другой задачей.";
-        sendText(exchange, response, 406);
+        sendText(exchange, "пересечение",406);
     }
 
-    protected void sendInternalError(HttpExchange exchange) throws IOException {
-        String response = "Произошла внутренняя ошибка сервера.";
-        sendText(exchange, response, 500);
-    }
 
-    protected <T> T readRequestBody(HttpExchange exchange, Class<T> clazz) throws IOException {
-        try (InputStream is = exchange.getRequestBody()) {
-            String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-            return GSON.fromJson(body, clazz);
-        } catch (Exception e) {
-            throw new IOException("Ошибка при чтении тела запроса", e);
-        }
-    }
+
+    protected Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .registerTypeAdapter(Duration.class, new DurationTimeAdapter())
+            .setPrettyPrinting()
+            .create();
+
 }

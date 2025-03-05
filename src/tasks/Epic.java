@@ -1,83 +1,61 @@
 package tasks;
 
+import statuses.StatusTask;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
+     protected final TaskType typeEpic = TaskType.EPIC;
+    private ArrayList<Integer> subtasks;
 
-    private final ArrayList<Subtask> subtaskList = new ArrayList<>();
-    private LocalDateTime endTime;
-
-    public Epic(String name, String description) {
-        super(name, description, TaskStatus.NEW, Duration.ZERO, null);
+    public Epic(String name, String description, StatusTask status, int id, Duration duration, LocalDateTime startTime) {
+        super(name, description, status, id, duration, startTime);
+        this.subtasks = new ArrayList<>();
     }
 
-    public Epic(String name, String description, int id, TaskStatus status) {
-        super(name, description, id, status, Duration.ZERO, null);
+
+    public Epic(String name, String description, StatusTask status, int id, LocalDateTime startTime) {
+        super(name, description, status, id, startTime);
+        this.subtasks = new ArrayList<>();
     }
 
     public void addSubtask(Subtask subtask) {
-        subtaskList.add(subtask);
-        updateEpicFields();
-    }
-
-    public ArrayList<Subtask> getSubtaskList() {
-        return new ArrayList<>(subtaskList);
-    }
-
-    public void removeSubtask(Subtask subtask) {
-        subtaskList.remove(subtask);
-        updateEpicFields();
-    }
-
-    public void clearSubtasks() {
-        subtaskList.clear();
-        updateEpicFields();
-    }
-
-    private void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    @Override
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    private void updateEpicFields() {
-        if (subtaskList.isEmpty()) {
-            setDuration(Duration.ZERO);
-            setStartTime(null);
-            setEndTime(null);
-            return;
+        if (checkNotContainsSubtask(subtask)) {
+            subtasks.add(subtask.getId());
+            subtask.setEpicId(this.id);
+        } else {
+            System.out.println("Данная подзадача уже существует в списке");
         }
+    }
 
-        LocalDateTime earliestStartTime = null;
-        LocalDateTime latestEndTime = null;
-        Duration totalDuration = Duration.ZERO;
+    public void removeSubtask(Integer subtaskId) {
+        subtasks.remove(subtaskId);
+    }
 
-        for (Subtask subtask : subtaskList) {
-            if (subtask.getStartTime() != null) {
-                if (earliestStartTime == null || subtask.getStartTime().isBefore(earliestStartTime)) {
-                    earliestStartTime = subtask.getStartTime();
-                }
-            }
-            if (subtask.getEndTime() != null) {
-                if (latestEndTime == null || subtask.getEndTime().isAfter(latestEndTime)) {
-                    latestEndTime = subtask.getEndTime();
-                }
-            }
-            totalDuration = totalDuration.plus(subtask.getDuration());
-        }
+    public void clearSubtaskList() {
+        subtasks.clear();
+    }
 
-        setDuration(totalDuration);
-        setStartTime(earliestStartTime);
-        setEndTime(latestEndTime);
+    public ArrayList<Integer> getSubtasks() {
+        return subtasks;
+    }
+
+    public void setSubtasks(ArrayList<Integer> subtasks) {
+        this.subtasks = subtasks;
     }
 
     @Override
     public String toString() {
-        return "Epic{" + "name='" + getName() + '\'' + ", description='" + getDescription() + '\'' + ", id=" + getId() + ", subtaskList.size=" + subtaskList.size() + ", status=" + getStatus() + ", duration=" + getDuration().toMinutes() + " minutes" + ", startTime=" + getStartTime() + ", endTime=" + getEndTime() + "}";
+        return String.format("%d,%s,%s,%s,%s,%s,%s,%s", id, typeEpic, name, status, description, duration, startTime,
+                endTime);
+    }
+
+    private boolean checkNotContainsSubtask(Subtask subtask) {
+        if (subtask == null) {
+            return false;
+        }
+        return !subtasks.contains(subtask.getId());
     }
 }
