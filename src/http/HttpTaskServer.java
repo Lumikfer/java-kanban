@@ -27,7 +27,6 @@ public class HttpTaskServer {
         httpServer.createContext("/epics", new EpicHttpHendler(taskManager));
         httpServer.createContext("/history", new Histhttphandler(taskManager));
         httpServer.createContext("/prioritized", new PriorHttpHandler(taskManager));
-
     }
 
     public static void main(String[] args) {
@@ -35,7 +34,6 @@ public class HttpTaskServer {
         HttpTaskServer httpServer = new HttpTaskServer(taskManager);
         httpServer.start();
         httpServer.stop();
-
     }
 
     public void start() {

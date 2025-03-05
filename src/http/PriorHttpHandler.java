@@ -28,8 +28,5 @@ public class PriorHttpHandler extends BaseHttpHandler implements HttpHandler {
         } else {
             sendNotFound(exchange, "поинта не существует");
         }
-
     }
-
-
 }

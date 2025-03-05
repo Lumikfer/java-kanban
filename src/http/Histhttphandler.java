@@ -28,7 +28,5 @@ public class Histhttphandler extends BaseHttpHandler implements HttpHandler {
         } else {
             sendNotFound(exchange, "поинта не существует");
         }
-
     }
-
 }

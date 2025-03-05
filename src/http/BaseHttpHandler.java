@@ -26,8 +26,6 @@ public class BaseHttpHandler {
         sendText(exchange, "пересечение",406);
     }
 
-
-
     protected Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationTimeAdapter())

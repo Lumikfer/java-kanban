@@ -15,31 +15,26 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+
         EndPoints endpoint = points(exchange.getRequestURI().getPath(), exchange.getRequestMethod());
 
         switch (endpoint) {
             case GET_TASKS:
                 GetTask(exchange);
                 break;
-
             case GET_TASK_ID:
                 GetTaskId(exchange);
                 break;
-
             case POST_TASK:
                 PostTask(exchange);
                 break;
-
             case DELETE_TASK:
                 DelTask(exchange);
                 break;
-
             default:
                 sendNotFound(exchange, "поинта не сущетсвует");
         }
     }
-
-
 
     private EndPoints points (String requestPath, String requestMethod){
         String[] e = requestPath.split("/");

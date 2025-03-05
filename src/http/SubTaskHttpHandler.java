@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class SubTaskHttpHandler extends  BaseHttpHandler implements HttpHandler {
+
     public  TaskManager taskManager;
     public SubTaskHttpHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -21,23 +22,20 @@ public class SubTaskHttpHandler extends  BaseHttpHandler implements HttpHandler 
             case GET_TASKS:
                 GetSubTask(exchange);
                 break;
-
             case GET_TASK_ID:
                 GetSubTaskId(exchange);
                 break;
-
             case POST_TASK:
                 PostSubTask(exchange);
                 break;
-
             case DELETE_TASK:
                 DelSubTask(exchange);
                 break;
-
             default:
                 sendNotFound(exchange, "поинта не сущетсвует");
         }
     }
+
     private EndPoints points (String requestPath, String requestMethod) {
         String[] e = requestPath.split("/");
         if (e.length == 2 && e[1].equals("subtasks")) {
@@ -108,6 +106,4 @@ public class SubTaskHttpHandler extends  BaseHttpHandler implements HttpHandler 
             sendText(exchange,"subtask удален",200);
         }
     }
-
-
 }

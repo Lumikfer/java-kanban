@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
 public class DurationTimeAdapter extends TypeAdapter<Duration> {
+
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     @Override

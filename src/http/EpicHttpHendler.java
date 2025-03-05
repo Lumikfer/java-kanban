@@ -25,29 +25,22 @@ public class EpicHttpHendler extends BaseHttpHandler implements HttpHandler {
             case GET_TASKS:
                 GetEpics(exchange);
                 break;
-
             case GET_TASK_ID:
                 GetEpicId(exchange);
                 break;
-
             case POST_TASK:
                 PostEpic(exchange);
                 break;
-
             case DELETE_TASK:
                 DelEpic(exchange);
                 break;
-
             case GET_SUBTASKS_BY_EPIC:
                 GetSubByEpic(exchange);
                 break;
-
             default:
                 sendNotFound(exchange, "поинта не сущетсвует");
         }
     }
-
-
 
     private EndPoints points (String requestPath, String requestMethod) {
         String[] e = requestPath.split("/");
@@ -135,7 +128,5 @@ public class EpicHttpHendler extends BaseHttpHandler implements HttpHandler {
         }else {
             sendText(exchange,res,200);
         }
-
     }
-
 }
