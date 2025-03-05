@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class StringFormatter {
 
-    public static Task TaskFromString(String value) {
+    public static Task taskFromString(String value) {
         String[] taskInfo = value.split(",");
         if (taskInfo[6].equals("null")) {
             return new Task(taskInfo[2], taskInfo[4], StatusTask.valueOf(taskInfo[3]), Integer.parseInt(taskInfo[0]),
@@ -19,7 +19,7 @@ public class StringFormatter {
         }
     }
 
-    public static Epic EpicFromString(String value) {
+    public static Epic epicFromString(String value) {
         String[] taskInfo = value.split(",");
         if (taskInfo[6].equals("null")) {
             return new Epic(taskInfo[2], taskInfo[4], StatusTask.valueOf(taskInfo[3]), Integer.parseInt(taskInfo[0]),
@@ -30,7 +30,7 @@ public class StringFormatter {
         }
     }
 
-    public static Subtask SubFromString(String value) {
+    public static Subtask subFromString(String value) {
         String[] taskInfo = value.split(",");
         if (taskInfo[6].equals("null")) {
             return new Subtask(taskInfo[2], taskInfo[4], StatusTask.valueOf(taskInfo[3]), Integer.parseInt(taskInfo[5]),
