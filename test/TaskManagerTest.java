@@ -40,7 +40,7 @@ public class TaskManagerTest {
 
     @Test
     void testAddSubtask() {
-        E Epic epic = new Epic("Epic 1", "Description",StatusTask.NEW,5,LocalDateTime.now());
+         Epic epic = new Epic("Epic 1", "Description",StatusTask.NEW,5,LocalDateTime.now());
         manager.addEpic(epic);
         Subtask subtask = new Subtask("Subtask 1", "Description", TaskStatus.NEW, epic.getId(), Duration.ofMinutes(30), LocalDateTime.now());
         manager.addSubtask(subtask);
@@ -78,7 +78,7 @@ public class TaskManagerTest {
 
     @Test
     void testRemoveTaskByID() {
-        ask task = new Task("Task 1", "Description", StatusTask.NEW,1,Duration.ofMinutes(30), LocalDateTime.now())
+        Task task = new Task("Task 1", "Description", StatusTask.NEW,1,Duration.ofMinutes(30), LocalDateTime.now());
         manager.addTask(task);
         manager.removeTaskByID(task.getId());
         assertNull(manager.getTaskByID(task.getId()));
