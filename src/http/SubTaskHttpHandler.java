@@ -36,7 +36,7 @@ public class SubTaskHttpHandler extends  BaseHttpHandler implements HttpHandler 
         }
     }
 
-    private EndPoints points (String requestPath, String requestMethod) {
+    private EndPoints points(String requestPath, String requestMethod) {
         String[] e = requestPath.split("/");
         if (e.length == 2 && e[1].equals("subtasks")) {
             if (requestMethod.equals("GET")) {
@@ -57,7 +57,7 @@ public class SubTaskHttpHandler extends  BaseHttpHandler implements HttpHandler 
         return EndPoints.UNKNOWN;
     }
 
-    private void PostSubTask(HttpExchange exchange) throws  IOException {
+    private void postSubTask(HttpExchange exchange) throws  IOException {
 
         String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8 );
 
@@ -76,7 +76,7 @@ public class SubTaskHttpHandler extends  BaseHttpHandler implements HttpHandler 
 
     }
 
-    private  void GetSubTask(HttpExchange exchange) throws IOException {
+    private  void getSubTask(HttpExchange exchange) throws IOException {
 
         String res = gson.toJson(taskManager.getSubtasks());
         if(res.isEmpty()) {
@@ -86,7 +86,7 @@ public class SubTaskHttpHandler extends  BaseHttpHandler implements HttpHandler 
         }
     }
 
-    private void GetSubTaskId(HttpExchange exchange) throws IOException {
+    private void getSubTaskId(HttpExchange exchange) throws IOException {
         String[] e = exchange.getRequestURI().getPath().split("/");
         String res = gson.toJson(taskManager.getSubtask(Integer.parseInt(e[2])));
         if(res.isEmpty()) {
@@ -96,7 +96,7 @@ public class SubTaskHttpHandler extends  BaseHttpHandler implements HttpHandler 
         }
     }
 
-    private void DelSubTask(HttpExchange exchange) throws IOException {
+    private void delSubTask(HttpExchange exchange) throws IOException {
         String[] e = exchange.getRequestURI().getPath().split("/");
         String res = gson.toJson(taskManager.getSubtask(Integer.parseInt(e[2])));
         if(res.isEmpty()) {

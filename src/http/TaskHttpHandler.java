@@ -36,7 +36,7 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
         }
     }
 
-    private EndPoints points (String requestPath, String requestMethod){
+    private EndPoints points(String requestPath, String requestMethod){
         String[] e = requestPath.split("/");
         if (e.length == 2 && e[1].equals("tasks")) {
             if (requestMethod.equals("GET")) {

@@ -42,7 +42,7 @@ public class EpicHttpHendler extends BaseHttpHandler implements HttpHandler {
         }
     }
 
-    private EndPoints points (String requestPath, String requestMethod) {
+    private EndPoints points(String requestPath, String requestMethod) {
         String[] e = requestPath.split("/");
         if (e.length == 2 && e[1].equals("epics")) {
             if (requestMethod.equals("GET")) {
@@ -68,7 +68,7 @@ public class EpicHttpHendler extends BaseHttpHandler implements HttpHandler {
         return EndPoints.UNKNOWN;
     }
 
-    private void PostEpic(HttpExchange exchange) throws  IOException {
+    private void postEpic(HttpExchange exchange) throws  IOException {
 
         String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8 );
 
@@ -87,7 +87,7 @@ public class EpicHttpHendler extends BaseHttpHandler implements HttpHandler {
 
     }
 
-    private  void GetEpics(HttpExchange exchange) throws IOException {
+    private  void getEpics(HttpExchange exchange) throws IOException {
 
         String res = gson.toJson(taskManager.getEpics());
         if(res.isEmpty()) {
@@ -97,7 +97,7 @@ public class EpicHttpHendler extends BaseHttpHandler implements HttpHandler {
         }
     }
 
-    private void GetEpicId(HttpExchange exchange) throws IOException {
+    private void getEpicId(HttpExchange exchange) throws IOException {
         String[] e = exchange.getRequestURI().getPath().split("/");
         String res = gson.toJson(taskManager.getEpic(Integer.parseInt(e[2])));
         if(res.isEmpty()) {
@@ -107,7 +107,7 @@ public class EpicHttpHendler extends BaseHttpHandler implements HttpHandler {
         }
     }
 
-    private void DelEpic(HttpExchange exchange) throws IOException {
+    private void delEpic(HttpExchange exchange) throws IOException {
         String[] e = exchange.getRequestURI().getPath().split("/");
         String res = gson.toJson(taskManager.getEpic(Integer.parseInt(e[2])));
         if(res.isEmpty()) {
@@ -118,7 +118,7 @@ public class EpicHttpHendler extends BaseHttpHandler implements HttpHandler {
         }
     }
 
-    private void GetSubByEpic(HttpExchange exchange) throws IOException {
+    private void getSubByEpic(HttpExchange exchange) throws IOException {
         String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8 );
         Epic task = gson.fromJson(requestBody, Epic.class);
         String[] e = exchange.getRequestURI().getPath().split("/");
