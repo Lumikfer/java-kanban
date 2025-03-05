@@ -290,6 +290,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setEndTime(epicEndTime);
         epic.setDuration(epicDuration);
     }
+
    @Override
     public boolean isIntersectionTaskTime(Task task) {
         if (!Objects.nonNull(task.getStartTime()) && !Objects.nonNull(task.getEndTime())) {
