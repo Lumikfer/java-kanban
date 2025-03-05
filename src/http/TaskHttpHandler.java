@@ -3,12 +3,14 @@ package http;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import managers.*;
-import  tasks.*;
+import tasks.*;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
-    public  TaskManager taskManager;
+    public TaskManager taskManager;
+
     public TaskHttpHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
@@ -36,7 +38,7 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
         }
     }
 
-    private EndPoints points(String requestPath, String requestMethod){
+    private EndPoints points(String requestPath, String requestMethod) {
         String[] e = requestPath.split("/");
         if (e.length == 2 && e[1].equals("tasks")) {
             if (requestMethod.equals("GET")) {
@@ -57,24 +59,24 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
         return EndPoints.UNKNOWN;
     }
 
-    private void DelTask(HttpExchange exchange) throws IOException  {
+    private void DelTask(HttpExchange exchange) throws IOException {
         String[] e = exchange.getRequestURI().getPath().split("/");
-        if(taskManager.getTask(Integer.parseInt(e[2])) != null) {
+        if (taskManager.getTask(Integer.parseInt(e[2])) != null) {
             taskManager.deleteTask(Integer.parseInt(e[2]));
-            sendText(exchange,"task удалена",201);
-        } else{
-            sendNotFound(exchange,"такой задачи нет");
+            sendText(exchange, "task удалена", 201);
+        } else {
+            sendNotFound(exchange, "такой задачи нет");
         }
 
     }
 
-    private  void GetTask(HttpExchange exchange) throws IOException {
+    private void GetTask(HttpExchange exchange) throws IOException {
 
         String res = gson.toJson(taskManager.getTasks());
-        if(res.isEmpty()) {
-            sendNotFound(exchange,"список пустой");
+        if (res.isEmpty()) {
+            sendNotFound(exchange, "список пустой");
         } else {
-            sendText(exchange,res,200);
+            sendText(exchange, res, 200);
         }
 
     }
@@ -82,29 +84,28 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
     private void GetTaskId(HttpExchange exchange) throws IOException {
         String[] e = exchange.getRequestURI().getPath().split("/");
         String res = gson.toJson(taskManager.getTask(Integer.parseInt(e[2])));
-        if(res.isEmpty()) {
-            sendNotFound(exchange,"такой задачи не суущетсвует");
-        }else{
-            sendText(exchange,res,200);
+        if (res.isEmpty()) {
+            sendNotFound(exchange, "такой задачи не суущетсвует");
+        } else {
+            sendText(exchange, res, 200);
         }
     }
 
-    private void PostTask(HttpExchange exchange) throws  IOException {
+    private void PostTask(HttpExchange exchange) throws IOException {
 
-        String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8 );
+        String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
 
         Task task = gson.fromJson(requestBody, Task.class);
 
-        if(taskManager.getTask(task.getId()) == null) {
+        if (taskManager.getTask(task.getId()) == null) {
             taskManager.addTask(task);
-            sendText(exchange,"задача добавлена",200);
+            sendText(exchange, "задача добавлена", 200);
         }
-        if(taskManager.isIntersectionTaskTime(task)) {
+        if (taskManager.isIntersectionTaskTime(task)) {
             sendHasInteractions(exchange);
-        }
-        else {
+        } else {
             taskManager.updateTask(task);
-            sendText(exchange,"задача обновлена",201);
+            sendText(exchange, "задача обновлена", 201);
         }
 
     }

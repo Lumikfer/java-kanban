@@ -60,73 +60,72 @@ public class EpicHttpHendler extends BaseHttpHandler implements HttpHandler {
                 return EndPoints.DELETE_TASK;
             }
         }
-        if(e.length > 3 && e[1].equals("epics")) {
-         if(requestMethod.equals("GET")){
-             return EndPoints.GET_SUBTASKS_BY_EPIC;
-         }
+        if (e.length > 3 && e[1].equals("epics")) {
+            if (requestMethod.equals("GET")) {
+                return EndPoints.GET_SUBTASKS_BY_EPIC;
+            }
         }
         return EndPoints.UNKNOWN;
     }
 
-    private void postEpic(HttpExchange exchange) throws  IOException {
+    private void postEpic(HttpExchange exchange) throws IOException {
 
-        String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8 );
+        String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
 
         Epic task = gson.fromJson(requestBody, Epic.class);
-        if(taskManager.isIntersectionTaskTime(task)) {
+        if (taskManager.isIntersectionTaskTime(task)) {
             sendHasInteractions(exchange);
         }
-        if(taskManager.getTask(task.getId()) == null) {
+        if (taskManager.getTask(task.getId()) == null) {
             taskManager.addEpic(task);
-            sendText(exchange,"epic добавлен",200);
-        }
-        else {
+            sendText(exchange, "epic добавлен", 200);
+        } else {
             taskManager.updateEpic(task);
-            sendText(exchange,"epic обновлен",201);
+            sendText(exchange, "epic обновлен", 201);
         }
 
     }
 
-    private  void getEpics(HttpExchange exchange) throws IOException {
+    private void getEpics(HttpExchange exchange) throws IOException {
 
         String res = gson.toJson(taskManager.getEpics());
-        if(res.isEmpty()) {
-            sendNotFound(exchange,"список epics пустой");
+        if (res.isEmpty()) {
+            sendNotFound(exchange, "список epics пустой");
         } else {
-            sendText(exchange,res,200);
+            sendText(exchange, res, 200);
         }
     }
 
     private void getEpicId(HttpExchange exchange) throws IOException {
         String[] e = exchange.getRequestURI().getPath().split("/");
         String res = gson.toJson(taskManager.getEpic(Integer.parseInt(e[2])));
-        if(res.isEmpty()) {
-            sendNotFound(exchange,"такого epic не суущетсвует");
-        }else{
-            sendText(exchange,res,200);
+        if (res.isEmpty()) {
+            sendNotFound(exchange, "такого epic не суущетсвует");
+        } else {
+            sendText(exchange, res, 200);
         }
     }
 
     private void delEpic(HttpExchange exchange) throws IOException {
         String[] e = exchange.getRequestURI().getPath().split("/");
         String res = gson.toJson(taskManager.getEpic(Integer.parseInt(e[2])));
-        if(res.isEmpty()) {
-            sendNotFound(exchange,"такого epic не суущетсвует");
-        }else{
+        if (res.isEmpty()) {
+            sendNotFound(exchange, "такого epic не суущетсвует");
+        } else {
             taskManager.deleteSubtask(Integer.parseInt(e[2]));
-            sendText(exchange,"epic удален",200);
+            sendText(exchange, "epic удален", 200);
         }
     }
 
     private void getSubByEpic(HttpExchange exchange) throws IOException {
-        String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8 );
+        String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
         Epic task = gson.fromJson(requestBody, Epic.class);
         String[] e = exchange.getRequestURI().getPath().split("/");
         String res = gson.toJson(taskManager.getEpicSubtasks(task.getId()));
-        if(res.isEmpty()) {
-            sendNotFound(exchange,"такого epic не суущетсвует");
-        }else {
-            sendText(exchange,res,200);
+        if (res.isEmpty()) {
+            sendNotFound(exchange, "такого epic не суущетсвует");
+        } else {
+            sendText(exchange, res, 200);
         }
     }
 }
