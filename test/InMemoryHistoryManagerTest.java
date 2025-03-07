@@ -1,7 +1,7 @@
 package test;
 
 import managers.*;
-import tasks.*
+import tasks.*;
 
 import org.junit.jupiter.api.Test;
 
