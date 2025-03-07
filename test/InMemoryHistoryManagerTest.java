@@ -2,6 +2,7 @@ package test;
 
 import managers.*;
 import tasks.*;
+import statuses.*;
 
 import org.junit.jupiter.api.Test;
 
