@@ -27,14 +27,14 @@ public class TaskManagerTest {
     void testAddTask() {
         Task task = new Task("Task 1", "Description", StatusTask.NEW, 1, Duration.ofMinutes(30), LocalDateTime.now());
         manager.addTask(task);
-        assertEquals(task, manager.getTaskByID(task.getId()));
+        assertEquals(task, manager.getTask(task.getId()));
     }
 
     @Test
     void testAddEpic() {
         Epic epic = new Epic("Epic 1", "Description", StatusTask.NEW, 5, LocalDateTime.now());
         manager.addEpic(epic);
-        assertEquals(epic, manager.getEpicByID(epic.getId()));
+        assertEquals(epic, manager.getEpic(epic.getId()));
     }
 
     @Test
@@ -43,7 +43,7 @@ public class TaskManagerTest {
         manager.addEpic(epic);
         Subtask subtask = new Subtask("Subtask 1", "Description", StatusTask.NEW, epic.getId(), Duration.ofMinutes(30), LocalDateTime.now());
         manager.addSubtask(subtask);
-        assertEquals(subtask, manager.getSubtaskByID(subtask.getId()));
+        assertEquals(subtask, manager.getSubtask(subtask.getId()));
     }
 
     @Test
@@ -52,7 +52,7 @@ public class TaskManagerTest {
         manager.addTask(task);
         task.setStatus(StatusTask.IN_PROGRESS);
         manager.updateTask(task);
-        assertEquals(StatusTask.IN_PROGRESS, manager.getTaskByID(task.getId()).getStatus());
+        assertEquals(StatusTask.IN_PROGRESS, manager.getTask(task.getId()).getStatus());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class TaskManagerTest {
         manager.addEpic(epic);
         epic.setName("Updated Epic");
         manager.updateEpic(epic);
-        assertEquals("Updated Epic", manager.getEpicByID(epic.getId()).getName());
+        assertEquals("Updated Epic", manager.getEpic(epic.getId()).getName());
     }
 
     @Test
@@ -72,22 +72,22 @@ public class TaskManagerTest {
         manager.addSubtask(subtask);
         subtask.setStatus(StatusTask.DONE);
         manager.updateSubtask(subtask);
-        assertEquals(StatusTask.DONE, manager.getSubtaskByID(subtask.getId()).getStatus());
+        assertEquals(StatusTask.DONE, manager.getSubtask(subtask.getId()).getStatus());
     }
 
     @Test
     void testRemoveTaskByID() {
         Task task = new Task("Task 1", "Description", StatusTask.NEW, 1, Duration.ofMinutes(30), LocalDateTime.now());
         manager.addTask(task);
-        manager.removeTaskByID(task.getId());
-        assertNull(manager.getTaskByID(task.getId()));
+        manager.deleteTask(task.getId());
+        assertNull(manager.getTask(task.getId()));
     }
 
     @Test
     void testRemoveEpicByID() {
         Epic epic = new Epic("Epic 1", "Description", StatusTask.NEW, 5, LocalDateTime.now());
         manager.addEpic(epic);
-        manager.removeEpicByID(epic.getId());
+        manager.deleteEpic(epic.getId());
         assertNull(manager.getEpicByID(epic.getId()));
     }
 }
