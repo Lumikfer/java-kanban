@@ -77,19 +77,22 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addTask(Task task) {
         if (isIntersectionTaskTime(task)) {
-            System.out.println("Задача пересекается по времени с другими");
-        } else if (task.getId() == 0) {
+            throw new IllegalStateException("Задачи пересекаются по времени!");
+        }
+
+        if (task.getId() == 0) {
             do {
                 taskId++;
                 task.setId(taskId);
             } while (checkContainsAllTasks(task));
+
             tasks.put(taskId, task);
             prioritizedTasks.add(task);
         } else if (!checkContainsAllTasks(task)) {
             tasks.put(task.getId(), task);
             prioritizedTasks.add(task);
         } else {
-            System.out.println("Данные с таким id существуют в списке");
+            throw new IllegalArgumentException("Задача с ID=" + task.getId() + " уже существует!");
         }
     }
 
