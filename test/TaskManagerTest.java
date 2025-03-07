@@ -41,7 +41,7 @@ public class TaskManagerTest {
     void testAddSubtask() {
         Epic epic = new Epic("Epic 1", "Description", StatusTask.NEW, 5, LocalDateTime.now());
         manager.addEpic(epic);
-        Subtask subtask = new Subtask("Subtask 1", "Description", StatusTask.NEW, epic.getId(), Duration.ofMinutes(30), LocalDateTime.now());
+        Subtask subtask = new Subtask("Subtask 1", "Description", StatusTask.NEW, epic.getId(), 6, LocalDateTime.now());
         manager.addSubtask(subtask);
         assertEquals(subtask, manager.getSubtask(subtask.getId()));
     }
@@ -68,7 +68,7 @@ public class TaskManagerTest {
     void testUpdateSubtask() {
         Epic epic = new Epic("Epic 1", "Description", StatusTask.NEW, 5, LocalDateTime.now());
         manager.addEpic(epic);
-        Subtask subtask = new Subtask("Subtask 1", "Description", StatusTask.NEW, epic.getId(), Duration.ofMinutes(30), LocalDateTime.now());
+        Subtask subtask = new Subtask("Subtask 1", "Description", StatusTask.NEW, epic.getId(), 6, LocalDateTime.now());
         manager.addSubtask(subtask);
         subtask.setStatus(StatusTask.DONE);
         manager.updateSubtask(subtask);
@@ -88,6 +88,6 @@ public class TaskManagerTest {
         Epic epic = new Epic("Epic 1", "Description", StatusTask.NEW, 5, LocalDateTime.now());
         manager.addEpic(epic);
         manager.deleteEpic(epic.getId());
-        assertNull(manager.getEpicByID(epic.getId()));
+        assertNull(manager.getEpic(epic.getId()));
     }
 }
