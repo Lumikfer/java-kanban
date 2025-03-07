@@ -15,8 +15,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HistoryManager historyManager = Managers.getDefaultHistory();
     private int taskId = 0;
-    private final Comparator<Task> comparator = Comparator.comparing(Task::getStartTime,
-            Comparator.nullsLast(Comparator.naturalOrder()));
+    private final Comparator<Task> comparator = Comparator.comparing(Task::getStartTime,Comparator.nullsLast(Comparator.naturalOrder()));
     private final TreeSet<Task> prioritizedTasks = new TreeSet<>(comparator);
 
     @Override
@@ -59,7 +58,10 @@ public class InMemoryTaskManager implements TaskManager {
     public ArrayList<Subtask> getEpicSubtasks(int epicId) {
         Epic epic = epics.get(epicId);
         if (epic != null) {
-            return epic.getSubtasks().stream().map(subtasks::get).collect(Collectors.toCollection(ArrayList::new));
+            return epic.getSubtasks()
+                    .stream()
+                    .map(subtasks::get)
+                    .collect(Collectors.toCollection(ArrayList::new));
         } else {
             System.out.println("Эпик не найден!");
             return null;
@@ -75,19 +77,22 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addTask(Task task) {
         if (isIntersectionTaskTime(task)) {
-            System.out.println("Задача пересекается по времени с другими");
-        } else if (task.getId() == 0) {
+            throw new IllegalStateException("Задачи пересекаются по времени!");
+        }
+
+        if (task.getId() == 0) {
             do {
                 taskId++;
                 task.setId(taskId);
             } while (checkContainsAllTasks(task));
+
             tasks.put(taskId, task);
             prioritizedTasks.add(task);
         } else if (!checkContainsAllTasks(task)) {
             tasks.put(task.getId(), task);
             prioritizedTasks.add(task);
         } else {
-            System.out.println("Данные с таким id существуют в списке");
+            throw new IllegalArgumentException("Задача с ID=" + task.getId() + " уже существует!");
         }
     }
 
@@ -289,7 +294,8 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setDuration(epicDuration);
     }
 
-    private boolean isIntersectionTaskTime(Task task) {
+   @Override
+    public boolean isIntersectionTaskTime(Task task) {
         if (!Objects.nonNull(task.getStartTime()) && !Objects.nonNull(task.getEndTime())) {
             return false;
         } else {

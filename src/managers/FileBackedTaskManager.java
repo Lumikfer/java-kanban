@@ -6,6 +6,7 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskType;
+import util.StringFormatter;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public FileBackedTaskManager() {
-        this.managerFile = new File("manager.csv");
+        this.managerFile = new File("task.txt");
     }
 
     @Override
@@ -111,13 +112,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 String[] taskInfo = task.split(",");
                 switch (TaskType.valueOf(taskInfo[1])) {
                     case TaskType.TASK:
-                        manager.addTask(Task.fromString(task));
+                        manager.addTask(StringFormatter.taskFromString(task));
                         break;
                     case TaskType.SUBTASK:
-                        manager.addSubtask(Subtask.fromString(task));
+                        manager.addSubtask(StringFormatter.subFromString(task));
                         break;
                     case TaskType.EPIC:
-                        manager.addEpic(Epic.fromString(task));
+                        manager.addEpic(StringFormatter.epicFromString(task));
                         break;
                     default:
                         System.out.println("Не определена задача в файле");

@@ -48,4 +48,6 @@ public interface TaskManager {
     void updateSubtask(Subtask subtask);
 
     void updateEpic(Epic epic);
+
+    boolean isIntersectionTaskTime(Task task);
 }
