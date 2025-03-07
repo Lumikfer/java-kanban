@@ -1,7 +1,9 @@
 package test;
 
-import managers.*;
-import tasks.*;
+import managers.TaskManager;
+import managers.InMemoryTaskManager;
+import tasks.StatusTask;
+import tasks.Task;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,8 +18,8 @@ public class InMemoryTaskManagerTest {
 
     @Test
     public void testTaskOverlap() {
-        Task task = new Task("Task 1", "Description", TaskStatus.NEW,1,Duration.ofMinutes(30), LocalDateTime.now());
-        Task task = new Task("Task 12", "Description2", TaskStatus.NEW,2,Duration.ofMinutes(30), LocalDateTime.now().plusMinutes(15));
+        Task task1 = new Task("Task 1", "Description", StatusTask.NEW, 1, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task2 = new Task("Task 2", "Description2", StatusTask.NEW, 2, Duration.ofMinutes(30), LocalDateTime.now().plusMinutes(15));
         manager.addTask(task1);
         assertThrows(IllegalStateException.class, () -> manager.addTask(task2));
     }
